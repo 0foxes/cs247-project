@@ -1,0 +1,67 @@
+#ifndef __GAME_H__
+#define __GAME_H__
+
+#include "board.h"
+#include "error.h"
+#include "player.h"
+#include "textdisplay.h"
+#include "view.h"
+#include <iostream>
+#include <memory>
+#include <vector>
+
+class Game {
+    // The board
+    // std::unique_ptr<Board> theBoard;
+    Board board;
+    // Associated players
+    Player players[2];
+    // all associated links
+    std::vector<std::shared_ptr<Link>> allLinks;
+    // std::vector<Link> links;
+    // Observers (or views)
+    std::vector<std::shared_ptr<View>> observers;
+    int currPlayerTurn; // Index of the current player whose turn it is
+
+    /*
+     * The following field helps track how the game has progressed.
+     * The field should track how many Cells of the grid are of each color.
+     * Whenever a Cell changes color, the corresponding color count should
+     * be updated.
+     */
+    // unsigned int colours[5];
+    // GameNotification* notification; // object registered for notifications
+    // Add private members, if necessary.
+
+  public:
+    Game(std::string player1links, std::string player2links,
+         bool isGraphic); // assume 2 players. Initializes 2 players,
+                          // and an empty 8x8 board.
+    void moveLink(char link, char direction);
+    void registerObserver(std::shared_ptr<View> observer);
+    // ask the game to print the views (for text)
+    void printGame(std::ostream& out);
+
+    /*
+     * Receive update notification from Cells.
+     */
+    // void notify(int r, int c, int oldState, int newState);
+
+    /*
+     * The following method is used to determine if the game has been won.
+     * ???
+     */
+    // bool isWon();
+    // void
+    // init(int n,
+    //  GameNotification* gameNotification); // Sets up an n x n grid.  Clears
+    // old grid, if necessary.
+    // void change(int c); // Changes (0,0) and all appropriate neighbours to c
+    // void init(int r, int c,
+    //           int change); // Called by Controller:init in response to
+    // initialization requests when game is in init mode
+    void notify(int r, int c, char state);
+    void endTurn();
+};
+
+#endif

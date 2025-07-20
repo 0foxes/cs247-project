@@ -1,0 +1,66 @@
+#include "link.h"
+
+// static tings
+int Link::currId = 0;
+
+Link::Link()
+    : linkType{LinkType::INVALID}, linkStrength{0}, uniqueId{currId++},
+      linkSymbol{0}, linkOwner{-1} {
+    // creates an "invalid" link
+    // need to do more steps to set up after this
+}
+
+// setters?
+void Link::makeVirus() { linkType = LinkType::VIRUS; }
+void Link::makeData() { linkType = LinkType::DATA; }
+void Link::setStrength(int strength) { linkStrength = strength; }
+void Link::setSymbol(char symbol) { linkSymbol = symbol; }
+
+// getters
+LinkType Link::type() const { return linkType; }
+int Link::strength() const { return linkStrength; }
+Error Link::validity() const {
+    std::string errorString = "";
+    bool isValid = true;
+    if (linkType == LinkType::INVALID) {
+        errorString += "Link type is INVALID, ";
+        isValid = false;
+    } //&& strength >= 1 && strength <= 4;
+    if (linkStrength < 1) {
+        errorString += "Link strength must be >= 1, ";
+        isValid = false;
+    }
+    if (linkStrength > 4) {
+        errorString += "Link strength must be <= 4, ";
+        isValid = false;
+    }
+
+    // return error if there is one
+    if (isValid) {
+        return Error();
+    }
+    return Error(ErrorType::INVALID_OBJECT_INSTANCE, errorString);
+}
+
+std::string Link::toString() const {
+    std::string linkString = "";
+    // linkString += std::to_string(uniqueId);
+    if (linkType == LinkType::DATA) {
+        linkString += "D";
+    } else if (linkType == LinkType::VIRUS) {
+        linkString += "V";
+    } else if (linkType == LinkType::INVALID) {
+        linkString += "INVALID";
+    }
+    return linkString + std::to_string(this->strength());
+}
+
+char Link::symbol() const { return linkSymbol; }
+
+int Link::owner() const { return linkOwner; }
+
+void Link::setOwner(int id) { linkOwner = id; }
+
+std::ostream& operator<<(std::ostream& out, const Link& link) {
+    return out << link.toString();
+}
