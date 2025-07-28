@@ -1,11 +1,10 @@
-#include "error.h"
+#include "../includes/error.h"
 
-Error::Error(ErrorType type, std::string msg)
-    : errortype{type}, errorstring{msg} {
+Error::Error(ErrorType type, string msg) : errortype{type}, errorstring{msg} {
     // later: if there is no error but there is an error message, get angy?
 }
 
-std::string Error::toString() const {
+string Error::toString() const {
     switch (errortype) {
     case ErrorType::NONE:
         return "No error";
@@ -18,6 +17,6 @@ std::string Error::toString() const {
     }
 }
 
-std::ostream& operator<<(std::ostream& out, const Error& error) {
-    return out << error.toString() << std::endl;
+ostream& operator<<(ostream& out, const Error& error) {
+    return out << error.toString() << endl;
 }

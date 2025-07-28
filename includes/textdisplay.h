@@ -4,8 +4,10 @@
 #include <iostream>
 #include <vector>
 
+using namespace std;
+
 class TextDisplay : public View {
-    std::vector<std::vector<char>> theBoard;
+    vector<vector<char>> theBoard;
     // The player id this view is associated with
     // -1 if from both
     int playerId;
@@ -24,7 +26,7 @@ class TextDisplay : public View {
     /*
      * Prints the grid as specified in the assignment specification.
      */
-    void print(std::ostream& out);
+    void print(ostream& out) override;
 };
 
 #endif

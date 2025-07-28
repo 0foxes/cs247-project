@@ -1,7 +1,7 @@
-#include "textdisplay.h"
+#include "../includes/textdisplay.h"
 
 TextDisplay::TextDisplay()
-    : theBoard{std::vector<std::vector<char>>(8, std::vector<char>(8, '.'))} {}
+    : theBoard{vector<vector<char>>(8, vector<char>(8, '.'))} {}
 
 /*
  * updates the symbol at position r, c
@@ -15,8 +15,8 @@ void TextDisplay::notify(int r, int c, char change) {
 /*
  * Prints the grid as specified in the assignment specification.
  */
-void TextDisplay::print(std::ostream& out) {
-    for (std::vector<char> row : theBoard) {
+void TextDisplay::print(ostream& out) {
+    for (vector<char> row : theBoard) {
         for (char element : row) {
             out << element;
         }

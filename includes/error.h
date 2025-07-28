@@ -5,19 +5,20 @@
 #include <string>
 // #include <utility>
 
+using namespace std;
+
 enum ErrorType { NONE, INVALID_PARAMETERS, INVALID_OBJECT_INSTANCE };
 class Error {
     ErrorType errortype;
-    std::string errorstring;
+    string errorstring;
 
   public:
     // the default error is no error
-    Error(ErrorType type = ErrorType::NONE,
-          std::string msg = "No further details");
+    Error(ErrorType type = ErrorType::NONE, string msg = "No further details");
     // to print it
-    std::string toString() const;
+    string toString() const;
 };
 
-std::ostream& operator<<(std::ostream& out, const Error& error);
+ostream& operator<<(ostream& out, const Error& error);
 
 #endif

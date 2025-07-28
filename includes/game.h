@@ -10,17 +10,19 @@
 #include <memory>
 #include <vector>
 
+using namespace std;
+
 class Game {
     // The board
-    // std::unique_ptr<Board> theBoard;
+    // unique_ptr<Board> theBoard;
     Board board;
     // Associated players
     Player players[2];
     // all associated links
-    std::vector<std::shared_ptr<Link>> allLinks;
-    // std::vector<Link> links;
+    vector<shared_ptr<Link>> allLinks;
+    // vector<Link> links;
     // Observers (or views)
-    std::vector<std::shared_ptr<View>> observers;
+    vector<shared_ptr<View>> observers;
     int currPlayerTurn; // Index of the current player whose turn it is
 
     /*
@@ -34,13 +36,15 @@ class Game {
     // Add private members, if necessary.
 
   public:
-    Game(std::string player1links, std::string player2links,
+    Game(string player1links, string player2links, string player1abilities,
+         string player2abilities,
          bool isGraphic); // assume 2 players. Initializes 2 players,
                           // and an empty 8x8 board.
     void moveLink(char link, char direction);
-    void registerObserver(std::shared_ptr<View> observer);
+    void registerObserver(shared_ptr<View> observer);
     // ask the game to print the views (for text)
-    void printGame(std::ostream& out);
+    void printGame(ostream& out);
+    void printAbilities(ostream& out);
 
     /*
      * Receive update notification from Cells.

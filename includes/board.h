@@ -9,6 +9,8 @@
 #include "link.h"
 #include "view.h"
 
+using namespace std;
+
 enum CellState { NORMAL_EMPTY, HAS_LINK, SERVER_PORT, FIREWALL };
 // A cell on the board can be
 // empty or have a link
@@ -17,28 +19,28 @@ enum CellState { NORMAL_EMPTY, HAS_LINK, SERVER_PORT, FIREWALL };
 // though)
 class Board {
     // die
-    // std::vector<std::vector<CellState>> grid;
+    // vector<vector<CellState>> grid;
     // Each cell can either be: empty, a server port, a link, or ???
     // if the cell has a link it will be specified here
-    // std::shared_ptr<Link> link;
-    std::vector<std::shared_ptr<View>> observers;
-    std::vector<std::vector<CellState>> grid;
-    std::map<std::shared_ptr<Link>, std::pair<int, int>> linkLocs;
+    // shared_ptr<Link> link;
+    vector<shared_ptr<View>> observers;
+    vector<vector<CellState>> grid;
+    map<shared_ptr<Link>, pair<int, int>> linkLocs;
     // key{a, b} is a server port owned by player w id {value}
-    std::map<std::pair<int, int>, int> serverPorts;
+    map<pair<int, int>, int> serverPorts;
     // key{a, b} holds link {value}
-    std::map<std::pair<int, int>, std::shared_ptr<Link>> occupied;
+    map<pair<int, int>, shared_ptr<Link>> occupied;
 
   public:
     Board();
-    void registerObserver(std::shared_ptr<View> observer);
-    void print(std::ostream& out);
+    void registerObserver(shared_ptr<View> observer);
+    void print(ostream& out);
     // updateCell(CellState state, int r, int c);
     // moveLinkTo(Link link, int r, int c);
     void init();
     // overloading?
-    void moveLink(int r, int c, std::shared_ptr<Link> link);
-    void moveLink(std::shared_ptr<Link> link,
+    void moveLink(int r, int c, shared_ptr<Link> link);
+    void moveLink(shared_ptr<Link> link,
                   char direction); // direction is definitely u, d, l, or r
     void notify(int r, int c, char state);
 };

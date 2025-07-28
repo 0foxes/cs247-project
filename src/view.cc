@@ -1,3 +1,3 @@
-#include "view.h"
+#include "../includes/view.h"
 
 View::~View() {}

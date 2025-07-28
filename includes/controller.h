@@ -6,6 +6,8 @@
 #include <iostream>
 #include <memory>
 
+using namespace std;
+
 // More documentation in controller.cc file
 
 class Controller {
@@ -14,9 +16,9 @@ class Controller {
 
     // View* display; // The text (or graphical!) display.
 
-    std::shared_ptr<Game> game;
+    shared_ptr<Game> game;
 
-    // void init(std::istream& input, Game& g);
+    // void init(istream& input, Game& g);
 
     /// Helper to check if the game is in a win state
     // if yes, prints Won to stdout and returns true
@@ -24,7 +26,8 @@ class Controller {
     // bool checkWin(int movesLeft);
 
   public:
-    Controller(std::string link1, std::string link2, bool isGraphic);
+    Controller(string link1, string link2, string ability1, string ability2,
+               bool isGraphic);
     // Controller(bool graphics = false);
     // ~Controller();
     void play();

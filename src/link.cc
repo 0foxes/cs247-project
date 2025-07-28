@@ -1,4 +1,4 @@
-#include "link.h"
+#include "../includes/link.h"
 
 // static tings
 int Link::currId = 0;
@@ -20,7 +20,7 @@ void Link::setSymbol(char symbol) { linkSymbol = symbol; }
 LinkType Link::type() const { return linkType; }
 int Link::strength() const { return linkStrength; }
 Error Link::validity() const {
-    std::string errorString = "";
+    string errorString = "";
     bool isValid = true;
     if (linkType == LinkType::INVALID) {
         errorString += "Link type is INVALID, ";
@@ -42,9 +42,9 @@ Error Link::validity() const {
     return Error(ErrorType::INVALID_OBJECT_INSTANCE, errorString);
 }
 
-std::string Link::toString() const {
-    std::string linkString = "";
-    // linkString += std::to_string(uniqueId);
+string Link::toString() const {
+    string linkString = "";
+    // linkString += to_string(uniqueId);
     if (linkType == LinkType::DATA) {
         linkString += "D";
     } else if (linkType == LinkType::VIRUS) {
@@ -52,7 +52,7 @@ std::string Link::toString() const {
     } else if (linkType == LinkType::INVALID) {
         linkString += "INVALID";
     }
-    return linkString + std::to_string(this->strength());
+    return linkString + to_string(this->strength());
 }
 
 char Link::symbol() const { return linkSymbol; }
@@ -61,6 +61,6 @@ int Link::owner() const { return linkOwner; }
 
 void Link::setOwner(int id) { linkOwner = id; }
 
-std::ostream& operator<<(std::ostream& out, const Link& link) {
+ostream& operator<<(ostream& out, const Link& link) {
     return out << link.toString();
 }

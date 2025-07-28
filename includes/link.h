@@ -4,6 +4,8 @@
 #include "error.h"
 #include <string>
 
+using namespace std;
+
 // Link Type ENUM
 enum LinkType { INVALID, DATA, VIRUS };
 
@@ -37,12 +39,12 @@ class Link {
     // getters
     LinkType type() const;
     int strength() const;
-    std::string toString() const;
+    string toString() const;
     int id() const;
     char symbol() const;
     int owner() const;
 };
 
-std::ostream& operator<<(std::ostream& out, const Link& link);
+ostream& operator<<(ostream& out, const Link& link);
 
 #endif
