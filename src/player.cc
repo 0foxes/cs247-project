@@ -15,8 +15,10 @@ void Player::registerObserver(shared_ptr<View> observer) {
 //     links.insert({symbol, link});
 // }
 
+string Player::getName() { return "Player " + to_string(id); }
+
 void Player::print(ostream& out) {
-    out << "Player " << to_string(id) << ":" << endl;
+    out << getName() << ":" << endl;
     int viruses = 0, datas = 0;
     for (auto link : downloaded) {
         viruses += link->type() == LinkType::VIRUS;
@@ -35,6 +37,7 @@ void Player::print(ostream& out) {
     }
     out << endl;
 }
+
 void Player::printcensored(ostream& out) {
     out << "Player " << to_string(id) << ":" << endl;
     out << "Downloaded: ";

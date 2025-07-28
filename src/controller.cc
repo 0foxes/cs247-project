@@ -68,14 +68,11 @@ void Controller::play() {
             string direction;
             if (cin >> link && cin >> direction) {
                 game->moveLink(link, direction[0]);
+                game->endTurn();
             }
             game->printGame(cout);
         } else if (cmd == "abilities") {
             game->printAbilities(cout);
-        } else if (cmd == "abilities") {
-            int id;
-            cin >> id;
-            cout << "unimplemented\n";
         } else if (cmd == "sequence") {
             string file;
             cin >> file;

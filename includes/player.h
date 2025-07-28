@@ -5,13 +5,14 @@
 #include "view.h"
 #include <map>
 #include <memory>
+#include <string>
 #include <vector>
 
 using namespace std;
 
 class Player {
     // static int currID; // the current ID the latest player is on
-    int id;                           // this player instance's ID
+    int id; // this player instance's ID
     map<char, bool> abilities;
     map<int, shared_ptr<Link>> links; // all links this player owns (can move)
     vector<shared_ptr<Link>>
@@ -34,11 +35,13 @@ class Player {
     void printabilities(ostream& out);
     void print(ostream& out);
     void printcensored(ostream& out);
+    string getName();
     void addLink(char symbol, shared_ptr<Link> link);
     bool owns(shared_ptr<Link> link);
     bool owns(char link);
     // vector<shared_ptr<Link>> downloadedLinks();
-    void init(string createlink = "D1 D2 D3 D4 V1 V2 V3 V4", string createability = "LFDSP");
+    void init(string createlink = "D1 D2 D3 D4 V1 V2 V3 V4",
+              string createability = "LFDSP");
 };
 
 // Initialize static member(s)

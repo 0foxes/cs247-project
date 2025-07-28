@@ -41,8 +41,12 @@ void Game::registerObserver(shared_ptr<View> observer) {
 // }
 
 void Game::printGame(ostream& out) {
+    out << "Current turn: " << players[currPlayerTurn].getName() << endl;
+    out << "--------" << endl;
     players[0].print(out);
+    out << "========" << endl;
     board.print(out);
+    out << "========" << endl;
     players[1].print(out);
 }
 
