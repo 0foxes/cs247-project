@@ -11,7 +11,7 @@ using namespace std;
  * If -graphics argument is provided, forward this to the controller
  */
 
-// ./main.elf -ability1 <file> -ability2 <file> -link1 <file> -link2 <file>
+// ./raiinet -ability1 <file> -ability2 <file> -link1 <file> -link2 <file>
 // -graphics
 
 // these all have defaults

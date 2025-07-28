@@ -6,9 +6,9 @@ SOURCES = $(shell find src -name "*.cc")
 OBJECTS := $(patsubst src/%.cc, build/%.o, $(SOURCES))
 DEPENDS := $(patsubst src/%.cc, build/%.d, $(SOURCES))
 
-RAIInet: main.elf
+RAIInet: raiinet
 
-%.elf: $(OBJECTS)
+raiinet: $(OBJECTS)
 	g++ $(CXXFLAGS) $^ -o $@ -lX11
 
 build/%.o: src/%.cc Makefile
@@ -19,4 +19,4 @@ build/%.o: src/%.cc Makefile
 
 .PHONY: clean
 clean:
-	rm -r build *.elf
+	rm -r build raiinet
