@@ -1,11 +1,14 @@
+#include <cstdlib>
+#include <ctime>
+#include <fstream>
+#include <iostream>
+#include <stack>
+#include <string>
+
 #include "../includes/controller.h"
 #include "../includes/game.h"
 // #include "../includes/graphicdisplay.h"
 // #include "../includes/textdisplay.h"
-#include <cstdlib>
-#include <ctime>
-#include <iostream>
-#include <string>
 
 using namespace std;
 
@@ -55,18 +58,30 @@ Controller::Controller(string link1, string link2, string ability1,
 
 void Controller::play() {
     int moves = 0;
-    string cmd;
     bool playing = false;
+
+    // allow input cmds from cin or files
+    stack<shared_ptr<istream>> inputs;
+    inputs.push(shared_ptr<istream>(&cin, [](istream*) {})); // safe cin wrapper
+
     // print before we start the game itself :)
     game->printGame(cout);
 
-    while (cin >> cmd) {
+    // loop all cmds from input stack. get args from *in instead of *cin
+    while (!inputs.empty()) {
+        string cmd;
+        auto in = inputs.top();
+        if (!(*in >> cmd)) {
+            inputs.pop(); // closes file automatically if it was an ifstream
+            continue;
+        }
+
         if (cmd == "board") {
             game->printGame(cout);
         } else if (cmd == "move") {
             char link;
             string direction;
-            if (cin >> link && cin >> direction) {
+            if (*in >> link && *in >> direction) {
                 game->moveLink(link, direction[0]);
                 game->endTurn();
             }
@@ -74,9 +89,15 @@ void Controller::play() {
         } else if (cmd == "abilities") {
             game->printAbilities(cout);
         } else if (cmd == "sequence") {
-            string file;
-            cin >> file;
-            cout << "unimplemented\n";
+            string filename;
+            *in >> filename;
+
+            auto file = make_shared<ifstream>(filename);
+            if (file->is_open()) {
+                inputs.push(file);
+            } else {
+                cerr << "Error: failed to open file " << filename << endl;
+            }
         } else if (cmd == "quit") {
             break;
         }
