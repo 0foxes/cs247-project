@@ -42,7 +42,7 @@ void Board::moveLink(int r, int c, std::shared_ptr<Link> link) {
         notify(linkLocs.at(link).first, linkLocs.at(link).second, '.');
         occupied.erase(linkLocs.at(link));
         linkLocs.at(link) = {r, c};
-        occupied.at({r, c}) = link;
+        occupied.insert({{r, c}, link});
         notify(r, c, link->symbol());
     } else if (!linkLocs.count(link) > 0 && occupied.count({r, c}) > 0 &&
                serverPorts.count({r, c}) > 0) {
