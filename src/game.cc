@@ -1,11 +1,15 @@
-#include "../includes/game.h"
+#include "game.h"
+#include "graphicdisplay.h"
 
 // assume 2 players. Initializes 2 players, and an empty 8x8 board.
 // inputs needed: link locations per player, abilities list per player
 Game::Game(string link1, string link2, string ability1, string ability2, bool isGraphic)
     : board{Board()}, players{Player(1, 'a'), Player(2, 'A')}, currPlayerTurn{0} {
-    if (!isGraphic)
-        this->registerObserver(make_shared<TextDisplay>());
+    // register text and graphic displays
+    this->registerObserver(make_shared<TextDisplay>());
+    if (isGraphic) {
+        this->registerObserver(make_shared<GraphicDisplay>(8));
+    }
 
     board.init();
     players[0].init(link1, ability1);

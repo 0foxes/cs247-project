@@ -27,7 +27,6 @@ int main(int argc, char* argv[]) {
     for (int i = 1; i < argc; ++i) {
         if (string(argv[i]) == "-graphics") {
             useGraphics = true;
-            break;
         } else if (string(argv[i]) == "-link1") {
             link1file = string(argv[++i]);
             ifstream input(link1file.c_str());
