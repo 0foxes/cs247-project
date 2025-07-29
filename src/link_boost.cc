@@ -1,6 +1,6 @@
-#include "game.h"
-#include "link_boost_ability.h"
-#include "player.h"
+#include "../includes/game.h"
+#include "../includes/link_boost_ability.h"
+#include "../includes/player.h"
 
 using namespace std;
 

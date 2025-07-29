@@ -1,6 +1,6 @@
-#include "player.h"
-#include "ability.h"
-#include "link_boost_ability.h"
+#include "../includes/player.h"
+#include "../includes/ability.h"
+#include "../includes/link_boost_ability.h"
 #include <sstream>
 
 // Each player should get initialized with:
