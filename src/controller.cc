@@ -5,10 +5,10 @@
 #include <stack>
 #include <string>
 
-#include "controller.h"
-#include "game.h"
-#include "graphicdisplay.h"
-#include "textdisplay.h"
+#include "../includes/controller.h"
+#include "../includes/game.h"
+#include "../includes/graphicdisplay.h"
+#include "../includes/textdisplay.h"
 
 using namespace std;
 

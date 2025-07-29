@@ -1,5 +1,5 @@
-#include "game.h"
-#include "graphicdisplay.h"
+#include "../includes/game.h"
+#include "../includes/graphicdisplay.h"
 
 // assume 2 players. Initializes 2 players, and an empty 8x8 board.
 // inputs needed: link locations per player, abilities list per player
