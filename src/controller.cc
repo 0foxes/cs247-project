@@ -13,8 +13,7 @@
 using namespace std;
 
 // TODO (part b)
-Controller::Controller(string link1, string link2, string ability1,
-                       string ability2, bool isGraphic)
+Controller::Controller(string link1, string link2, string ability1, string ability2, bool isGraphic)
     : game{nullptr} {
     game = make_shared<Game>(link1, link2, ability1, ability2, isGraphic);
     // else(){
@@ -97,6 +96,16 @@ void Controller::play() {
                 inputs.push(file);
             } else {
                 cerr << "Error: failed to open file " << filename << endl;
+            }
+        } else if (cmd == "ability") {
+            // make current player use ability
+            int abilityId;
+            if (*in >> abilityId) {
+                if (!game->useAbility(game->getCurrPlayerId(), abilityId, *in)) {
+                    cerr << "Error: ability failed " << abilityId << endl;
+                }
+            } else {
+                cerr << "Error: ability ID missing\n";
             }
         } else if (cmd == "quit") {
             break;

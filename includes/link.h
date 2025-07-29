@@ -25,6 +25,9 @@ class Link {
     char linkSymbol;
     int linkOwner;
 
+    // true if it has the boosted ability (move 1 extra cell)
+    bool isBoosted;
+
     Error validity() const;
 
   public:
@@ -36,13 +39,16 @@ class Link {
     void setStrength(int strength);
     void setSymbol(char symbol);
     void setOwner(int id);
+    void setBoosted(bool boosted) { isBoosted = boosted; }
+
     // getters
-    LinkType type() const;
-    int strength() const;
+    LinkType getType() const;
+    int getStrength() const;
     string toString() const;
-    int id() const;
-    char symbol() const;
-    int owner() const;
+    int getId() const;
+    char getSymbol() const;
+    int getOwner() const;
+    bool getIsBoosted() const { return isBoosted; }
 };
 
 ostream& operator<<(ostream& out, const Link& link);

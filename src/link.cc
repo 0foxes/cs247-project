@@ -5,7 +5,7 @@ int Link::currId = 0;
 
 Link::Link()
     : linkType{LinkType::INVALID}, linkStrength{0}, uniqueId{currId++},
-      linkSymbol{0}, linkOwner{-1} {
+      linkSymbol{0}, linkOwner{-1}, isBoosted{false} {
     // creates an "invalid" link
     // need to do more steps to set up after this
 }
@@ -17,8 +17,9 @@ void Link::setStrength(int strength) { linkStrength = strength; }
 void Link::setSymbol(char symbol) { linkSymbol = symbol; }
 
 // getters
-LinkType Link::type() const { return linkType; }
-int Link::strength() const { return linkStrength; }
+LinkType Link::getType() const { return linkType; }
+int Link::getStrength() const { return linkStrength; }
+
 Error Link::validity() const {
     string errorString = "";
     bool isValid = true;
@@ -52,12 +53,12 @@ string Link::toString() const {
     } else if (linkType == LinkType::INVALID) {
         linkString += "INVALID";
     }
-    return linkString + to_string(this->strength());
+    return linkString + to_string(this->getStrength());
 }
 
-char Link::symbol() const { return linkSymbol; }
+char Link::getSymbol() const { return linkSymbol; }
 
-int Link::owner() const { return linkOwner; }
+int Link::getOwner() const { return linkOwner; }
 
 void Link::setOwner(int id) { linkOwner = id; }
 

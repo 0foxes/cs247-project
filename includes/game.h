@@ -13,11 +13,13 @@
 using namespace std;
 
 class Game {
+    static constexpr int NUM_PLAYERS = 2;
+
     // The board
     // unique_ptr<Board> theBoard;
     Board board;
     // Associated players
-    Player players[2];
+    vector<Player> players;
     // all associated links
     vector<shared_ptr<Link>> allLinks;
     // vector<Link> links;
@@ -42,6 +44,7 @@ class Game {
                           // and an empty 8x8 board.
     void moveLink(char link, char direction);
     void registerObserver(shared_ptr<View> observer);
+
     // ask the game to print the views (for text)
     void printGame(ostream& out);
     void printAbilities(ostream& out);
@@ -66,6 +69,13 @@ class Game {
     // initialization requests when game is in init mode
     void notify(int r, int c, char state);
     void endTurn();
+
+    Board& getBoard() { return board; }
+    Player& getCurrentPlayer() { return players[currPlayerTurn]; }
+    int getCurrPlayerId() { return currPlayerTurn; }
+
+    // use an ability for player. `in` is the ability args
+    bool useAbility(int playerId, int ablityId, istream& in);
 };
 
 #endif

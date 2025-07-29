@@ -31,6 +31,9 @@ class Board {
     // key{a, b} holds link {value}
     map<pair<int, int>, shared_ptr<Link>> occupied;
 
+    // check if a position is in the board
+    bool isInBounds(int r, int c) const;
+
   public:
     Board();
     void registerObserver(shared_ptr<View> observer);
@@ -38,10 +41,11 @@ class Board {
     // updateCell(CellState state, int r, int c);
     // moveLinkTo(Link link, int r, int c);
     void init();
-    // overloading?
+
     void moveLink(int r, int c, shared_ptr<Link> link);
     void moveLink(shared_ptr<Link> link,
                   char direction); // direction is definitely u, d, l, or r
+
     void notify(int r, int c, char state);
 };
 
