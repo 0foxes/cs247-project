@@ -16,14 +16,13 @@ bool LinkBoostAbility::use(Game& game, istream& in) {
     }
 
     // make sure the link belongs to the player using the ability
-    Player* user = getOwner();
-    if (!user) {
+    if (!getOwner()) {
         cerr << "Error: owner is null\n";
         return false;
     }
 
     // boost the link
-    std::shared_ptr<Link> link = user->getLink(linkId);
+    std::shared_ptr<Link> link = getOwner()->getLink(linkId);
     if (!link) {
         cerr << "Error: invalid link ID\n";
         return false;

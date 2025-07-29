@@ -39,6 +39,7 @@ class Player {
     void print(ostream& out);
     void printcensored(ostream& out);
     string getName();
+    int getId();
 
     void addLink(char symbol, shared_ptr<Link> link);
 

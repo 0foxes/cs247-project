@@ -1,6 +1,7 @@
 #include "../includes/player.h"
 #include "../includes/ability.h"
 #include "../includes/link_boost_ability.h"
+#include "../includes/stork_visitation_ability.h"
 #include <sstream>
 
 // Each player should get initialized with:
@@ -11,9 +12,9 @@ Player::Player(int id, char base) : id{id}, baseSymbol{base} {}
 
 void Player::registerObserver(shared_ptr<View> observer) { observers.push_back(observer); }
 
-// void Player::addLink(char symbol, shared_ptr<Link> link) {
-//     links.insert({symbol, link});
-// }
+void Player::addLink(char symbol, shared_ptr<Link> link) { links.insert({symbol, link}); }
+
+int Player::getId() { return id; }
 
 string Player::getName() { return "Player " + to_string(id); }
 
@@ -62,7 +63,7 @@ void Player::printcensored(ostream& out) {
 void Player::printabilities(ostream& out) {
     for (auto i : abilities) {
         out << i.first;
-        if (!i.second) {
+        if (!i.second->isUsed()) {
             out << " unused";
         } else {
             out << " used";
@@ -99,7 +100,7 @@ void Player::init(string createLink, string createAbility) {
             return;
         }
         newlink->setSymbol(i + baseSymbol);
-        links.insert({i, newlink});
+        addLink(i, newlink);
     }
 
     // create abilities ids 1-5 based on abilities string
@@ -110,7 +111,7 @@ void Player::init(string createLink, string createAbility) {
             abilities[++numAbilities] = make_shared<LinkBoostAbility>(this);
             break;
         case 'V':
-            // stork
+            abilities[++numAbilities] = make_shared<StorkVisitationAbility>(this);
             break;
         case 'U':
             // unsurmountable
