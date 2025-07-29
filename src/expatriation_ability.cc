@@ -25,6 +25,7 @@ bool ExpatriationAbility::use(Game& game, istream& in) {
         movedlink = owner->getOwnedLinks().at(index);
     } else {
         cerr << "current player cannot move the specified link";
+        return false;
     }
     game.getBoard().moveLink(r, c, movedlink);
 

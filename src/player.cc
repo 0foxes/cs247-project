@@ -3,6 +3,7 @@
 #include "../includes/link_boost_ability.h"
 #include "../includes/stork_visitation_ability.h"
 #include "../includes/expatriation_ability.h"
+#include "../includes/scan_ability.h"
 #include <sstream>
 
 // Each player should get initialized with:
@@ -121,7 +122,7 @@ void Player::init(string createLink, string createAbility) {
             abilities[++numAbilities] = make_shared<ExpatriationAbility>(this);
             break;
         case 'S':
-            // scan
+            abilities[++numAbilities] = make_shared<ScanAbility>(this);
             break;
         case 'P':
             // polarize

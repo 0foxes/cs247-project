@@ -38,8 +38,7 @@ class Game {
     // Add private members, if necessary.
 
   public:
-    Game(string player1links, string player2links, string player1abilities,
-         string player2abilities,
+    Game(string player1links, string player2links, string player1abilities, string player2abilities,
          bool isGraphic); // assume 2 players. Initializes 2 players,
                           // and an empty 8x8 board.
     void moveLink(char link, char direction);
@@ -72,6 +71,7 @@ class Game {
 
     Board& getBoard() { return board; }
     Player& getCurrentPlayer() { return players[currPlayerTurn]; }
+    Player& getNextPlayer() { return players[1 - currPlayerTurn]; }
     int getCurrPlayerId() { return currPlayerTurn; }
 
     // use an ability for player. `in` is the ability args
