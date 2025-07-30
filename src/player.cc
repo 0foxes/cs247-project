@@ -94,7 +94,9 @@ void Player::init(string createLink, string createAbility) {
     }
 
     // create abilities ids 1-5 based on abilities string
+    vector<int> count(26, 0);
     for (char c : createAbility) {
+        count[c - 'A']++;
         switch (c) {
         case 'L':
             abilities.emplace_back(make_shared<LinkBoostAbility>(this));
@@ -124,6 +126,15 @@ void Player::init(string createLink, string createAbility) {
             cerr << "unknown ability: " << c << endl;
             return;
         }
+    }
+    int max_count = 0;
+    for (int i: count) {
+        if (i > max_count) {
+            max_count = i;
+        }
+    }
+    if (max_count > 2) {
+        cerr << "cannot take more than 2 of an ability" << endl;
     }
 
     // notify observers of the new links
