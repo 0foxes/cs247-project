@@ -9,12 +9,6 @@
 using namespace std;
 
 class GraphicDisplay : public View {
-    // state things associated with a player
-    typedef struct {
-        vector<shared_ptr<Link>> links;
-        vector<shared_ptr<Link>> downloaded;
-    } PlayerState;
-
     Xwindow xw;
     int cellWidth;                    // size of each cell in pixels
     int gridSize;                     // size of board, assuming grid (n x n)
@@ -32,8 +26,8 @@ class GraphicDisplay : public View {
 
     // redraw the cell for (r, c) to contain the item `change`
     void notify(int r, int c, CellState cell) override;
-    void notify(int playerId, vector<shared_ptr<Link>> links,
-                vector<shared_ptr<Link>> downloads) override;
+    void notify(int playerId, vector<shared_ptr<Link>> links, vector<shared_ptr<Link>> downloads,
+                vector<shared_ptr<Ability>>) override;
     void notifyCurrPlayer(int playerId) override { currPlayerId = playerId; }
     void print(ostream& out) override;
 };

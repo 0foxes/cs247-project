@@ -22,12 +22,14 @@ void TextDisplay::notify(int r, int c, CellState cell) {
 }
 
 void TextDisplay::notify(int playerId, vector<shared_ptr<Link>> links,
-                         vector<shared_ptr<Link>> downloads) {
+                         vector<shared_ptr<Link>> downloads,
+                         vector<shared_ptr<Ability>> abilities) {
     PlayerState& ps = playerStates[playerId];
 
     // update player state
     ps.links = links;
     ps.downloaded = downloads;
+    ps.abilities = abilities;
 }
 
 void TextDisplay::printPlayer(int id, ostream& out) {
@@ -42,6 +44,16 @@ void TextDisplay::printPlayer(int id, ostream& out) {
         datas += link->getType() == LinkType::DATA;
     }
 
+    // abilities
+    int abilitiesAvail = 0;
+    for (auto& ability : p.abilities) {
+        if (!ability->isUsed()) {
+            abilitiesAvail++;
+        }
+    }
+    out << "Abilities: " << abilitiesAvail << endl;
+
+    // downloads
     out << "Downloaded: " << to_string(datas) << "D, " << to_string(viruses) << "V" << endl;
 
     bool isfirst = true;

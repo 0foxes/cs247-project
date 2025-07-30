@@ -15,8 +15,8 @@ using namespace std;
 class Player {
     // static int currID; // the current ID the latest player is on
     int id; // this player instance's ID
-    // // map of abilities this player owns. key is the ability's ID (1-5)
-    map<int, shared_ptr<Ability>> abilities;
+    // map of abilities this player owns. key is the ability's ID (1-5)
+    vector<shared_ptr<Ability>> abilities;
     vector<shared_ptr<Link>> links; // all links this player owns (can move)
     // all links this players has downloaded
     vector<shared_ptr<Link>> downloaded;

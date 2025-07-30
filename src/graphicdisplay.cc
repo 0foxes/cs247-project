@@ -24,6 +24,15 @@ void GraphicDisplay::drawPlayerState(int playerId) {
     // header
     xw.drawString(10, yBase + lineHeight, "Player " + to_string(playerId) + ":");
 
+    // abilities
+    int abilitiesAvail = 0;
+    for (auto& ability : ps.abilities) {
+        if (!ability->isUsed()) {
+            abilitiesAvail++;
+        }
+    }
+    xw.drawString(10, yBase + 2 * lineHeight, "Abilities: " + to_string(abilitiesAvail));
+
     // downloads
     int dataCount = 0, virusCount = 0;
     for (auto& download : ps.downloaded) {
@@ -33,7 +42,7 @@ void GraphicDisplay::drawPlayerState(int playerId) {
             virusCount++;
         }
     }
-    xw.drawString(10, yBase + 2 * lineHeight,
+    xw.drawString(10, yBase + 3 * lineHeight,
                   "Downloaded: " + to_string(dataCount) + "D, " + to_string(virusCount) + "V");
 
     // links
@@ -52,7 +61,7 @@ void GraphicDisplay::drawPlayerState(int playerId) {
         }
     }
 
-    xw.drawString(10, yBase + 3 * lineHeight, linkStr);
+    xw.drawString(10, yBase + 4 * lineHeight, linkStr);
 }
 
 void GraphicDisplay::notify(int r, int c, CellState cell) {
@@ -83,12 +92,14 @@ void GraphicDisplay::notify(int r, int c, CellState cell) {
 }
 
 void GraphicDisplay::notify(int playerId, vector<shared_ptr<Link>> links,
-                            vector<shared_ptr<Link>> downloads) {
+                            vector<shared_ptr<Link>> downloads,
+                            vector<shared_ptr<Ability>> abilities) {
     PlayerState& ps = playerStates[playerId];
 
     // update player state
     ps.links = links;
     ps.downloaded = downloads;
+    ps.abilities = abilities;
 
     // redraw
     drawPlayerState(playerId);

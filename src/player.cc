@@ -48,9 +48,9 @@ void Player::printcensored(ostream& out) {
 }
 
 void Player::printabilities(ostream& out) {
-    for (auto i : abilities) {
-        out << i.first << ": " << i.second->getName() << " - ";
-        if (!i.second->isUsed()) {
+    for (int i = 1; i <= abilities.size(); i++) {
+        out << i << ": " << abilities[i]->getName() << " - ";
+        if (!abilities[i]->isUsed()) {
             out << " unused";
         } else {
             out << " used";
@@ -94,32 +94,31 @@ void Player::init(string createLink, string createAbility) {
     }
 
     // create abilities ids 1-5 based on abilities string
-    int numAbilities = 0;
     for (char c : createAbility) {
         switch (c) {
         case 'L':
-            abilities[++numAbilities] = make_shared<LinkBoostAbility>(this);
+            abilities.emplace_back(make_shared<LinkBoostAbility>(this));
             break;
         case 'V':
-            abilities[++numAbilities] = make_shared<StorkVisitationAbility>(this);
+            abilities.emplace_back(make_shared<StorkVisitationAbility>(this));
             break;
         case 'U':
-            abilities[++numAbilities] = make_shared<UnsurmountableAbility>(this);
+            abilities.emplace_back(make_shared<UnsurmountableAbility>(this));
             break;
         case 'E':
-            abilities[++numAbilities] = make_shared<ExpatriationAbility>(this);
+            abilities.emplace_back(make_shared<ExpatriationAbility>(this));
             break;
         case 'S':
-            abilities[++numAbilities] = make_shared<ScanAbility>(this);
+            abilities.emplace_back(make_shared<ScanAbility>(this));
             break;
         case 'P':
-            abilities[++numAbilities] = make_shared<PolarizeAbility>(this);
+            abilities.emplace_back(make_shared<PolarizeAbility>(this));
             break;
         case 'D':
-            abilities[++numAbilities] = make_shared<DownloadAbility>(this);
+            abilities.emplace_back(make_shared<DownloadAbility>(this));
             break;
         case 'F':
-            abilities[++numAbilities] = make_shared<FirewallAbility>(this);
+            abilities.emplace_back(make_shared<FirewallAbility>(this));
             break;
         default:
             cerr << "unknown ability: " << c << endl;
@@ -129,7 +128,7 @@ void Player::init(string createLink, string createAbility) {
 
     // notify observers of the new links
     for (shared_ptr<View> observer : observers) {
-        observer->notify(id, links, downloaded);
+        observer->notify(id, links, downloaded, abilities);
     }
 }
 
@@ -177,6 +176,11 @@ bool Player::useAbility(int id, istream& in, Game& game) {
         return false;
     }
 
+    // notify observers of ability use
+    for (shared_ptr<View> observer : observers) {
+        observer->notify(id, links, downloaded, abilities);
+    }
+
     return ability->use(game, in);
 }
 
@@ -187,6 +191,6 @@ void Player::download(shared_ptr<Link> link) {
     downloaded.push_back(link);
     // notify observers of the new downloaded link
     for (shared_ptr<View> observer : observers) {
-        observer->notify(id, links, downloaded);
+        observer->notify(id, links, downloaded, abilities);
     }
 }

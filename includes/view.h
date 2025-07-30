@@ -1,6 +1,7 @@
 #ifndef __DISPLAY_H__
 #define __DISPLAY_H__
 
+#include "ability.h"
 #include "link.h"
 #include <iostream>
 #include <memory>
@@ -21,6 +22,13 @@ class View {
         int serverPortOwnerId = -1;
     } CellState;
 
+    // state things associated with a player
+    typedef struct {
+        vector<shared_ptr<Link>> links;
+        vector<shared_ptr<Link>> downloaded;
+        vector<shared_ptr<Ability>> abilities;
+    } PlayerState;
+
     /*
      * The Controller calls notify to
      * update the (r,c) location to contain item
@@ -32,7 +40,7 @@ class View {
      * should be called on change of player's links, downloads, etc
      */
     virtual void notify(int playerId, vector<shared_ptr<Link>> links,
-                        vector<shared_ptr<Link>> downloads) = 0;
+                        vector<shared_ptr<Link>> downloads, vector<shared_ptr<Ability>>) = 0;
 
     /**
      * who's turn it is

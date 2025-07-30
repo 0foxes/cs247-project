@@ -1,5 +1,6 @@
 #ifndef __TEXTDISPLAY_H__
 #define __TEXTDISPLAY_H__
+#include "ability.h"
 #include "view.h"
 #include <iostream>
 #include <map>
@@ -8,12 +9,6 @@
 using namespace std;
 
 class TextDisplay : public View {
-    // state things associated with a player
-    typedef struct {
-        vector<shared_ptr<Link>> links;
-        vector<shared_ptr<Link>> downloaded;
-    } PlayerState;
-
     vector<vector<char>> theBoard;
 
     // The player id this view is associated with
@@ -38,8 +33,8 @@ class TextDisplay : public View {
     void notify(int r, int c, CellState cell) override;
 
     // update player state
-    void notify(int playerId, vector<shared_ptr<Link>> links,
-                vector<shared_ptr<Link>> downloads) override;
+    void notify(int playerId, vector<shared_ptr<Link>> links, vector<shared_ptr<Link>> downloads,
+                vector<shared_ptr<Ability>>) override;
 
     void notifyCurrPlayer(int playerId) override { currPlayerId = playerId; }
 
