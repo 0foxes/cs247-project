@@ -6,13 +6,13 @@
 
 using namespace std;
 
-// Link Type ENUM
+// Link LinkType ENUM
 enum LinkType { INVALID, DATA, VIRUS };
 
 // Each link can be
-// a Data or Virus
-// on the board somewhere or downloaded by either player
-// boosted or not
+// - a Data or Virus
+// - on the board somewhere or downloaded by either player
+// - boosted or not
 class Link {
     static int currId;
     // aaa

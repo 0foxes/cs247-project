@@ -15,15 +15,29 @@ Game::Game(string link1, string link2, string ability1, string ability2, bool is
     players[0].init(link1, ability1);
     players[1].init(link2, ability2);
 
+    // place links on the board in starting locations. note that links d/D and e/E must be in front
+    // of server port cells
+    int p0LinkCol = 0;
     for (auto link : players[0].getOwnedLinks()) {
-        // notify(0 + (link.first == 3 || link.first == 4), link.first,
-        //        link.first + players[0].base());
-        board.moveLink(0 + (link.first == 3 || link.first == 4), link.first, link.second);
+        if (link->getSymbol() == 'd' || link->getSymbol() == 'e') {
+            board.initLink(1, p0LinkCol++, link);
+        } else {
+            board.initLink(0, p0LinkCol++, link);
+        }
     }
+    int p1LinkCol = 0;
     for (auto link : players[1].getOwnedLinks()) {
-        // notify(7 - (link.first == 3 || link.first == 4), link.first,
-        //        link.first + players[1].base());
-        board.moveLink(7 - (link.first == 3 || link.first == 4), link.first, link.second);
+        if (link->getSymbol() == 'D' || link->getSymbol() == 'E') {
+            board.initLink(6, p1LinkCol++, link);
+        } else {
+            board.initLink(7, p1LinkCol++, link);
+        }
+    }
+
+    // notify observers
+    for (shared_ptr<View> observer : observers) {
+        observer->notify(1, players[0].getOwnedLinks(), players[0].getDownloaded());
+        observer->notify(2, players[1].getOwnedLinks(), players[1].getDownloaded());
     }
 }
 
@@ -41,15 +55,18 @@ void Game::registerObserver(shared_ptr<View> observer) {
 // }
 
 void Game::printGame(ostream& out) {
-    out << endl;
-    out << "Next turn: " << players[currPlayerTurn].getName() << endl;
-    out << "--------" << endl;
-    players[0].print(out);
-    out << "========" << endl;
-    board.print(out);
-    out << "========" << endl;
-    players[1].print(out);
-    out << endl;
+    for (shared_ptr<View> observer : observers) {
+        observer->print(out);
+    }
+    // out << endl;
+    // out << "Next turn: " << players[currPlayerTurn].getName() << endl;
+    // out << "--------" << endl;
+    // // players[0].print(out);
+    // out << "========" << endl;
+    // board.print(out);
+    // out << "========" << endl;
+    // // players[1].print(out);
+    // out << endl;
 }
 
 void Game::printAbilities(ostream& out) { players[currPlayerTurn].printabilities(out); }
@@ -60,7 +77,7 @@ void Game::notify(int r, int c, char state) {
     }
 }
 
-void Game::moveLink(char link, char direction) {
+bool Game::moveLink(char link, char direction) {
     // check that the player does in fact own the specified link
     int index = link - players[currPlayerTurn].getBaseSymbol();
     shared_ptr<Link> movedlink;
@@ -69,8 +86,20 @@ void Game::moveLink(char link, char direction) {
         movedlink = players[currPlayerTurn].getOwnedLinks().at(index);
     } else {
         cerr << "current player cannot move the specified link";
+        return false;
     }
-    board.moveLink(movedlink, direction);
+    Board::MoveResult move = board.moveLink(movedlink, direction);
+    if (move.newR == -1 || move.newC == -1) {
+        cerr << "Error: link cant be moved to the specified location.\n";
+        return false;
+    }
+
+    for (shared_ptr<View> observer : observers) {
+        observer->notify(move.oldR, move.oldC, '.');         // clear old link
+        observer->notify(move.newR, move.newC, move.symbol); // new link
+    }
+
+    return true;
 }
 
 void Game::endTurn() {
@@ -79,7 +108,7 @@ void Game::endTurn() {
     if (players[currPlayerTurn].getUnsurmountable()) {
         players[currPlayerTurn].setUnsurmountable(false);
         for (auto link : players[currPlayerTurn].getOwnedLinks()) {
-            link.second->setStrength(link.second->getStrength() - 10);
+            link->setStrength(link->getStrength() - 10);
         }
     }
 }

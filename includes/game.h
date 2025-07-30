@@ -41,7 +41,7 @@ class Game {
     Game(string player1links, string player2links, string player1abilities, string player2abilities,
          bool isGraphic); // assume 2 players. Initializes 2 players,
                           // and an empty 8x8 board.
-    void moveLink(char link, char direction);
+    bool moveLink(char link, char direction);
     void registerObserver(shared_ptr<View> observer);
 
     // ask the game to print the views (for text)

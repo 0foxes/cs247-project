@@ -11,7 +11,7 @@ bool UnsurmountableAbility::use(Game& game, istream& in) {
 
     // unsurmountable the links
     for (auto link : owner->getOwnedLinks()) {
-        link.second->setStrength(link.second->getStrength() + 10);
+        link->setStrength(link->getStrength() + 10);
     }
     owner->setUnsurmountable(true);
 

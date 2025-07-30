@@ -1,12 +1,12 @@
 #include "../includes/player.h"
 #include "../includes/ability.h"
+#include "../includes/download_ability.h"
 #include "../includes/expatriation_ability.h"
 #include "../includes/link_boost_ability.h"
 #include "../includes/polarize_ability.h"
 #include "../includes/scan_ability.h"
 #include "../includes/stork_visitation_ability.h"
 #include "../includes/unsurmountable_ability.h"
-#include "../includes/download_ability.h"
 #include <memory>
 #include <sstream>
 
@@ -18,31 +18,11 @@ Player::Player(int id, char base) : id{id}, baseSymbol{base}, unsurmountable{fal
 
 void Player::registerObserver(shared_ptr<View> observer) { observers.push_back(observer); }
 
-void Player::addLink(char symbol, shared_ptr<Link> link) { links.insert({symbol, link}); }
+void Player::addLink(char symbol, shared_ptr<Link> link) { links.emplace_back(link); }
 
-int Player::getId() { return id; }
+int Player::getId() const { return id; }
 
-string Player::getName() { return "Player " + to_string(id); }
-
-void Player::print(ostream& out) {
-    out << getName() << ":" << endl;
-    int viruses = 0, datas = 0;
-    for (auto link : downloaded) {
-        viruses += link->getType() == LinkType::VIRUS;
-        datas += link->getType() == LinkType::DATA;
-    }
-    out << "Downloaded: " << to_string(datas) << "D, " << to_string(viruses) << "V";
-    bool isfirst = true;
-    out << endl;
-    for (auto linkpair : links) {
-        if (!isfirst) {
-            out << " ";
-        }
-        isfirst = false;
-        out << (char)(linkpair.first + baseSymbol) << ": " << *linkpair.second;
-    }
-    out << endl;
-}
+string Player::getName() const { return "Player " + to_string(id); }
 
 void Player::printcensored(ostream& out) {
     out << "Player " << to_string(id) << ":" << endl;
@@ -56,12 +36,12 @@ void Player::printcensored(ostream& out) {
         out << *link;
     }
     out << endl;
-    for (auto linkpair : links) {
+    for (auto link : links) {
         if (!isfirst) {
             out << " ";
         }
         isfirst = false;
-        out << (char)(linkpair.first + baseSymbol) << ": ?";
+        out << link->toString() << ": ?";
     }
     out << endl;
 }
@@ -77,7 +57,9 @@ void Player::printabilities(ostream& out) {
         out << endl;
     }
 }
-map<int, shared_ptr<Link>> Player::getOwnedLinks() { return links; }
+vector<shared_ptr<Link>> Player::getOwnedLinks() const { return links; }
+
+vector<shared_ptr<Link>> Player::getDownloaded() const { return downloaded; }
 
 void Player::init(string createLink, string createAbility) {
     istringstream linkStream(createLink);
@@ -142,27 +124,32 @@ void Player::init(string createLink, string createAbility) {
             return;
         }
     }
+
+    // notify observers of the new links
+    for (shared_ptr<View> observer : observers) {
+        observer->notify(id, links, downloaded);
+    }
 }
 
 char Player::getBaseSymbol() { return baseSymbol; }
 
 bool Player::owns(shared_ptr<Link> link) {
     for (auto i : links) {
-        if (i.second == link)
+        if (i == link)
             return true;
     }
     return false;
 }
 bool Player::owns(char link) {
     for (auto i : links) {
-        if (i.second->getSymbol() == link)
+        if (i->getSymbol() == link)
             return true;
     }
     return false;
 }
 
 shared_ptr<Link> Player::getLink(char symbol) {
-    for (const auto& [id, link] : links) {
+    for (const auto& link : links) {
         if (link->getSymbol() == symbol) {
             return link;
         }
@@ -193,4 +180,4 @@ bool Player::useAbility(int id, istream& in, Game& game) {
 
 void Player::setUnsurmountable(bool val) { unsurmountable = val; }
 bool Player::getUnsurmountable() { return unsurmountable; }
-void Player::Download(shared_ptr<Link> link) {downloaded.push_back(link);}
+void Player::Download(shared_ptr<Link> link) { downloaded.push_back(link); }
