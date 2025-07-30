@@ -23,8 +23,7 @@ class Ability {
 
     // returns true if this ability has been used at least once
     bool isUsed() const { return (uses > 0); }
-
     Player* getOwner() const { return owner; }
 };
 
-#endif // __ABILITY_H__
+#endif

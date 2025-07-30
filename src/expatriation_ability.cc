@@ -10,8 +10,6 @@ ExpatriationAbility::ExpatriationAbility(Player* owner) : Ability(owner) {}
 bool ExpatriationAbility::use(Game& game, istream& in) {
     char link;
     int r, c;
-
-    // args are row, col
     if (!(in >> link >> r >> c)) {
         cerr << "Error: expatriation arg missing\n";
         return false;

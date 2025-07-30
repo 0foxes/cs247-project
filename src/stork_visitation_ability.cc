@@ -9,8 +9,6 @@ StorkVisitationAbility::StorkVisitationAbility(Player* owner) : Ability(owner) {
 
 bool StorkVisitationAbility::use(Game& game, istream& in) {
     int r, c;
-
-    // args are row, col
     if (!(in >> r >> c)) {
         cerr << "Error: stork visitation arg missing\n";
         return false;
@@ -32,7 +30,6 @@ bool StorkVisitationAbility::use(Game& game, istream& in) {
 
     // inc uses of this ability
     uses++;
-
     return true;
 }
 

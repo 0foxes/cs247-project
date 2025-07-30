@@ -7,7 +7,6 @@ class LinkBoostAbility : public Ability {
   public:
     explicit LinkBoostAbility(Player* owner);
 
-    // args[0] is the ID of the link to boost. must be owned by the player
     bool use(Game& game, std::istream& in) override;
 
     std::string getName() const override;
