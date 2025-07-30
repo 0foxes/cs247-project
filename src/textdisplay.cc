@@ -1,5 +1,5 @@
-#include "textdisplay.h"
-#include "board.h"
+#include "../includes/textdisplay.h"
+#include "../includes/board.h"
 
 TextDisplay::TextDisplay() : theBoard{vector<vector<char>>(8, vector<char>(8, '.'))} {}
 

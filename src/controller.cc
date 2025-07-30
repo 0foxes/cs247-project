@@ -7,8 +7,6 @@
 
 #include "../includes/controller.h"
 #include "../includes/game.h"
-#include "../includes/graphicdisplay.h"
-#include "../includes/textdisplay.h"
 
 using namespace std;
 
