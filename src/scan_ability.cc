@@ -20,6 +20,7 @@ bool ScanAbility::use(Game& game, istream& in) {
     if (game.getNextPlayer().owns(link)) {
         scannedLink = game.getNextPlayer().getOwnedLinks().at(index);
         cout << "type " << (scannedLink->getType() == 1 ? "DATA" : "VIRUS") << " strength " << scannedLink->getStrength() << endl;
+        scannedLink->setRevealed(true);
     } else {
         cerr << "current player cannot scan own link" << endl;
         return false;

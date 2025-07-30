@@ -52,9 +52,9 @@ class Board {
     }
 
     // helper to notify observers of a cell state change
-    void notifyObservers(int r, int c);
 
   public:
+    void notifyObservers(int r, int c);
     // piece `symbol` moved from `oldR`, `oldC` to `newR`, `newC`
     struct MoveResult {
         int oldR, oldC;

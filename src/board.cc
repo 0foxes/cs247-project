@@ -30,6 +30,8 @@ void Board::notifyObservers(int r, int c) {
     if (cell.link != nullptr) {
         state.link = cell.link->getSymbol();
         state.linkOwnerId = cell.link->getOwner();
+        state.linkType = cell.link->getType();
+        state.isRevealed = cell.link->getIsRevealed();
     } else {
         state.link = '.';
     }

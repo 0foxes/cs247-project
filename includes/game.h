@@ -74,6 +74,7 @@ class Game {
     Player& getCurrentPlayer() { return players[currPlayerTurn]; }
     Player& getNextPlayer() { return players[1 - currPlayerTurn]; }
     int getCurrPlayerId() { return currPlayerTurn; }
+    int getNextPlayerId() { return 1 - currPlayerTurn; }
     int getAbilitiesUsed() const { return abilitiesUsed; }
 
     // use an ability for player. `in` is the ability args

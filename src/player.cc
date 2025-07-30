@@ -3,6 +3,7 @@
 #include "../includes/download_ability.h"
 #include "../includes/expatriation_ability.h"
 #include "../includes/firewall_ability.h"
+#include "../includes/game.h"
 #include "../includes/link_boost_ability.h"
 #include "../includes/polarize_ability.h"
 #include "../includes/scan_ability.h"
@@ -128,7 +129,7 @@ void Player::init(string createLink, string createAbility) {
         }
     }
     int max_count = 0;
-    for (int i: count) {
+    for (int i : count) {
         if (i > max_count) {
             max_count = i;
         }
@@ -189,10 +190,21 @@ bool Player::useAbility(int id, istream& in, Game& game) {
 
     // notify observers of ability use
     for (shared_ptr<View> observer : observers) {
-        observer->notify(id, links, downloaded, abilities);
+        observer->notify(game.getCurrPlayerId() + 1, links, downloaded, abilities);
     }
 
-    return ability->use(game, in);
+    bool result = ability->use(game, in);
+    // notify observers of ability results
+    for (shared_ptr<View> observer : observers) {
+        observer->notify(game.getNextPlayerId() + 1, game.getNextPlayer().links,
+                         game.getNextPlayer().downloaded, game.getNextPlayer().abilities);
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                game.getBoard().notifyObservers(i,j);
+            }
+        }
+    }
+    return result;
 }
 
 void Player::setUnsurmountable(bool val) { unsurmountable = val; }

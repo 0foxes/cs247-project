@@ -16,10 +16,12 @@ class View {
         char link = '.'; // link existing in this cell or '.' if no link
         bool hasFirewall = false;
         bool isServerPort = false;
+        bool isRevealed = false;
         // owner ids. -1 if not relevant
         int linkOwnerId = -1;
         int firewallOwnerId = -1;
         int serverPortOwnerId = -1;
+        int linkType = -1;
     } CellState;
 
     // state things associated with a player

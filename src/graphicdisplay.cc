@@ -87,6 +87,14 @@ void GraphicDisplay::notify(int r, int c, CellState cell) {
     xw.fillRectangle(c * cellWidth + 5, r * cellWidth + 5, cellWidth - 10, cellWidth - 10,
                      Xwindow::White);
     // draw new item symbol or blank if nothing there
+    if (cell.linkType == 1 && cell.isRevealed) {
+        xw.fillRectangle(c * cellWidth + 5, r * cellWidth + 5, cellWidth - 10, cellWidth - 10,
+                         Xwindow::Green);
+    } else if (cell.linkType == 2 && cell.isRevealed) {
+        xw.fillRectangle(c * cellWidth + 5, r * cellWidth + 5, cellWidth - 10, cellWidth - 10,
+                         Xwindow::Red);
+    }
+
     xw.drawString((c * cellWidth) + (cellWidth / 2), (r * cellWidth) + (cellWidth / 2),
                   (itemSymbol == '.') ? "" : string(1, itemSymbol));
 }

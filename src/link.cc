@@ -5,7 +5,7 @@ int Link::currId = 0;
 
 Link::Link()
     : linkType{LinkType::INVALID}, linkStrength{0}, uniqueId{currId++}, linkSymbol{0},
-      linkOwner{-1}, downloadedBy{-1}, isBoosted{false} {
+      linkOwner{-1}, downloadedBy{-1}, isBoosted{false}, isRevealed{false} {
     // creates an "invalid" link
     // need to do more steps to set up after this
 }
