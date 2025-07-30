@@ -4,8 +4,8 @@
 int Link::currId = 0;
 
 Link::Link()
-    : linkType{LinkType::INVALID}, linkStrength{0}, uniqueId{currId++},
-      linkSymbol{0}, linkOwner{-1}, isBoosted{false} {
+    : linkType{LinkType::INVALID}, linkStrength{0}, uniqueId{currId++}, linkSymbol{0},
+      linkOwner{-1}, isBoosted{false} {
     // creates an "invalid" link
     // need to do more steps to set up after this
 }
@@ -14,7 +14,7 @@ Link::Link()
 void Link::makeVirus() { linkType = LinkType::VIRUS; }
 void Link::makeData() { linkType = LinkType::DATA; }
 void Link::setStrength(int strength) { linkStrength = strength; }
-void Link::setType(LinkType type) {linkType = type;}
+void Link::setType(LinkType type) { linkType = type; }
 void Link::setSymbol(char symbol) { linkSymbol = symbol; }
 
 // getters
@@ -54,7 +54,7 @@ string Link::toString() const {
     } else if (linkType == LinkType::INVALID) {
         linkString += "INVALID";
     }
-    return linkString + to_string(this->getStrength());
+    return linkString + (this->getStrength() > 4 ? "4" : to_string(this->getStrength()));
 }
 
 char Link::getSymbol() const { return linkSymbol; }
@@ -63,6 +63,4 @@ int Link::getOwner() const { return linkOwner; }
 
 void Link::setOwner(int id) { linkOwner = id; }
 
-ostream& operator<<(ostream& out, const Link& link) {
-    return out << link.toString();
-}
+ostream& operator<<(ostream& out, const Link& link) { return out << link.toString(); }

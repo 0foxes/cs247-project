@@ -12,7 +12,7 @@ bool PolarizeAbility::use(Game& game, istream& in) {
 
     // args are row, col
     if (!(in >> link)) {
-        cerr << "Error: scan arg missing\n";
+        cerr << "Error: polarize arg missing\n";
         return false;
     }
 

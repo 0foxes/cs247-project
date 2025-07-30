@@ -1,10 +1,11 @@
 #include "../includes/player.h"
 #include "../includes/ability.h"
-#include "../includes/link_boost_ability.h"
-#include "../includes/stork_visitation_ability.h"
 #include "../includes/expatriation_ability.h"
-#include "../includes/scan_ability.h"
+#include "../includes/link_boost_ability.h"
 #include "../includes/polarize_ability.h"
+#include "../includes/scan_ability.h"
+#include "../includes/stork_visitation_ability.h"
+#include "../includes/unsurmountable_ability.h"
 #include <memory>
 #include <sstream>
 
@@ -12,7 +13,7 @@
 //  5 abilities (not done)
 //  8 links (4 data 4 virus, 1 of each strength)
 //  2 associated server ports?
-Player::Player(int id, char base) : id{id}, baseSymbol{base} {}
+Player::Player(int id, char base) : id{id}, baseSymbol{base}, unsurmountable{false} {}
 
 void Player::registerObserver(shared_ptr<View> observer) { observers.push_back(observer); }
 
@@ -118,7 +119,7 @@ void Player::init(string createLink, string createAbility) {
             abilities[++numAbilities] = make_shared<StorkVisitationAbility>(this);
             break;
         case 'U':
-            // unsurmountable
+            abilities[++numAbilities] = make_shared<UnsurmountableAbility>(this);
             break;
         case 'E':
             abilities[++numAbilities] = make_shared<ExpatriationAbility>(this);
@@ -188,3 +189,6 @@ bool Player::useAbility(int id, istream& in, Game& game) {
 
     return ability->use(game, in);
 }
+
+void Player::setUnsurmountable(bool val) { unsurmountable = val; }
+bool Player::getUnsurmountable() { return unsurmountable; }

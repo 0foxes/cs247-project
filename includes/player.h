@@ -22,6 +22,7 @@ class Player {
     vector<shared_ptr<Link>> downloaded;
     vector<shared_ptr<View>> observers;
     char baseSymbol;
+    bool unsurmountable;
 
     // needs:
     // downloaded links list?
@@ -50,8 +51,7 @@ class Player {
     shared_ptr<Link> getLink(char symbol);
 
     // vector<shared_ptr<Link>> downloadedLinks();
-    void init(string createlink = "D1 D2 D3 D4 V1 V2 V3 V4",
-              string createability = "LFDSP");
+    void init(string createlink = "D1 D2 D3 D4 V1 V2 V3 V4", string createability = "LFDSP");
 
     // return false if issue using ability.
     // id is the ability ID (1-5). in is ability args
@@ -59,6 +59,8 @@ class Player {
 
     // Initialize static member(s)
     // int Player::currID = 0;
+    void setUnsurmountable(bool val);
+    bool getUnsurmountable();
 };
 
 #endif

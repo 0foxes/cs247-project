@@ -76,6 +76,12 @@ void Game::moveLink(char link, char direction) {
 void Game::endTurn() {
     currPlayerTurn++;
     currPlayerTurn %= 2;
+    if (players[currPlayerTurn].getUnsurmountable()) {
+        players[currPlayerTurn].setUnsurmountable(false);
+        for (auto link : players[currPlayerTurn].getOwnedLinks()) {
+            link.second->setStrength(link.second->getStrength() - 10);
+        }
+    }
 }
 
 bool Game::useAbility(int playerId, int abilityId, istream& in) {
