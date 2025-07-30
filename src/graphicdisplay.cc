@@ -14,7 +14,7 @@ GraphicDisplay::GraphicDisplay(int n)
 
 void GraphicDisplay::drawPlayerState(int playerId) {
     const int lineHeight = 16;
-    int yBase = (playerId == 1) ? 500 : 500 + 100;
+    int yBase = (playerId == 0) ? 500 : 500 + 100;
 
     const auto& ps = playerStates[playerId];
 
@@ -22,7 +22,8 @@ void GraphicDisplay::drawPlayerState(int playerId) {
     xw.fillRectangle(0, yBase, 500, 100, Xwindow::White);
 
     // header
-    xw.drawString(10, yBase + lineHeight, "Player " + to_string(playerId) + ":");
+    // player number is 1-indexed in display
+    xw.drawString(10, yBase + lineHeight, "Player " + to_string(playerId + 1) + ":");
 
     // abilities
     int abilitiesAvail = 0;

@@ -5,7 +5,7 @@
 // assume 2 players. Initializes 2 players, and an empty 8x8 board.
 // inputs needed: link locations per player, abilities list per player
 Game::Game(string link1, string link2, string ability1, string ability2, bool isGraphic)
-    : board{Board()}, players{Player(1, 'a'), Player(2, 'A')}, currPlayerTurn{0} {
+    : board{Board()}, players{Player(0, 'a'), Player(1, 'A')}, currPlayerTurn{0} {
     // register text and graphic displays
     this->registerObserver(make_shared<TextDisplay>());
     if (isGraphic) {
@@ -14,7 +14,7 @@ Game::Game(string link1, string link2, string ability1, string ability2, bool is
 
     // must notify who's turn it is before initializing everything
     for (shared_ptr<View> observer : observers) {
-        observer->notifyCurrPlayer(1); // start with player 1
+        observer->notifyCurrPlayer(0); // start with player 1 (index 0)
     }
 
     board.init();
@@ -63,8 +63,8 @@ void Game::printAbilities(ostream& out) { players[currPlayerTurn].printabilities
  * - do battle logic
  */
 bool Game::moveLink(char link, char direction) {
-    // opponent id
-    int opponentId = (currPlayerTurn + 1 == 1) ? 2 : 1;
+    // opponent id 0-indexed
+    int opponentId = (currPlayerTurn + 1) % 2;
 
     // check that the player does in fact own the specified link
     int index = link - players[currPlayerTurn].getBaseSymbol();
@@ -100,36 +100,40 @@ bool Game::moveLink(char link, char direction) {
     // check if link moved into opponents server port
     int serverportOwner = board.getServerPortOwner(move.newR, move.newC);
     if (serverportOwner == opponentId) {
-        players[opponentId - 1].download(movedlink);
+        players[opponentId].download(movedlink);
         board.removeLink(movedlink);
     }
 
     // battle!!!!!!
     // check if link moved into opponents link
-    shared_ptr<Link> existingLink = board.getLink(move.newR, move.newC);
-    if (existingLink != nullptr && existingLink->getOwner() == opponentId) {
-        // reveal both links
-        movedlink->setRevealed(true);
-        existingLink->setRevealed(true);
+    vector<shared_ptr<Link>> existingLinks = board.getLink(move.newR, move.newC);
+    for (shared_ptr<Link> existingLink : existingLinks) {
+        if (existingLink->getOwner() == opponentId) {
+            // reveal both links
+            movedlink->setRevealed(true);
+            existingLink->setRevealed(true);
 
-        // winner is player whos link has higher strength.
-        // winner downloads the link of the loser
-        int winnerId = -1;
-        if (movedlink->getStrength() > existingLink->getStrength()) {
-            winnerId = currPlayerTurn + 1; // player ids are 1-indexed
-            players[currPlayerTurn].download(existingLink);
-            board.removeLink(existingLink);
-        } else if (movedlink->getStrength() < existingLink->getStrength()) {
-            winnerId = opponentId;
-            players[opponentId - 1].download(movedlink);
-            board.removeLink(movedlink);
-        } else {
-            // equal strenght - initiater wins
-            winnerId = currPlayerTurn + 1;
-            players[currPlayerTurn].download(existingLink);
-            board.removeLink(existingLink);
+            // winner is player whos link has higher strength.
+            // winner downloads the link of the loser
+            int winnerId = -1;
+            if (movedlink->getStrength() > existingLink->getStrength()) {
+                winnerId = currPlayerTurn + 1; // player ids are 1-indexed
+                players[currPlayerTurn].download(existingLink);
+                board.removeLink(existingLink);
+            } else if (movedlink->getStrength() < existingLink->getStrength()) {
+                winnerId = opponentId;
+                players[opponentId].download(movedlink);
+                board.removeLink(movedlink);
+            } else {
+                // equal strenght - initiater wins
+                winnerId = currPlayerTurn + 1;
+                players[currPlayerTurn].download(existingLink);
+                board.removeLink(existingLink);
+            }
+            break;
         }
     }
+
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             board.notifyObservers(i, j);

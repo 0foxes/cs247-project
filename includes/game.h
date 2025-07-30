@@ -71,10 +71,11 @@ class Game {
     void endTurn();
 
     Board& getBoard() { return board; }
+    // return ids, 0-indexed
     Player& getCurrentPlayer() { return players[currPlayerTurn]; }
-    Player& getNextPlayer() { return players[1 - currPlayerTurn]; }
+    Player& getNextPlayer() { return players[(currPlayerTurn + 1) % 2]; }
     int getCurrPlayerId() { return currPlayerTurn; }
-    int getNextPlayerId() { return 1 - currPlayerTurn; }
+    int getNextPlayerId() { return (currPlayerTurn + 1) % 2; }
     int getAbilitiesUsed() const { return abilitiesUsed; }
 
     // use an ability for player. `in` is the ability args

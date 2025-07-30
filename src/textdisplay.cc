@@ -81,7 +81,7 @@ void TextDisplay::print(ostream& out) {
     out << "--------\n";
 
     // player1
-    printPlayer(1, out);
+    printPlayer(0, out);
 
     // the board
     out << "========\n";
@@ -94,7 +94,7 @@ void TextDisplay::print(ostream& out) {
     out << "========\n";
 
     // player 2
-    printPlayer(2, out);
+    printPlayer(1, out);
 
     out << endl;
 }

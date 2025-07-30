@@ -2,6 +2,7 @@
 #define __BOARD_H__
 
 // Standard headers
+#include <algorithm>
 #include <map>
 #include <memory>
 #include <vector>
@@ -19,7 +20,8 @@ using namespace std;
 class Board {
     // a cell and its properties
     struct Cell {
-        shared_ptr<Link> link = nullptr; // null if no link is in this cell
+        // allow for cells to have multiple links occupying (battle, or future extensions)
+        vector<shared_ptr<Link>> links = {}; // empty if no link is in this cell
         bool hasFirewall = false;
         bool isServerPort = false;
         int serverPortOwner = -1; // player id who owns this server port. -1 if no server port
@@ -41,9 +43,12 @@ class Board {
 
     // helper to get the link's location on the board or -1,-1 if not found
     pair<int, int> getLinkLocation(shared_ptr<Link> link) const {
+        // loop all rows and cols of grid
         for (int r = 0; r < grid.size(); r++) {
             for (int c = 0; c < grid[r].size(); c++) {
-                if (grid[r][c].link == link) {
+                // check all links in this cell
+                if (find(grid[r][c].links.begin(), grid[r][c].links.end(), link) !=
+                    grid[r][c].links.end()) {
                     return {r, c};
                 }
             }
@@ -93,7 +98,7 @@ class Board {
     }
 
     // return link on (r, c) or nullptr if no link there
-    shared_ptr<Link> getLink(int r, int c) const { return getCell(r, c).link; }
+    vector<shared_ptr<Link>> getLink(int r, int c) const { return getCell(r, c).links; }
 
     void removeLink(shared_ptr<Link> link);
 };

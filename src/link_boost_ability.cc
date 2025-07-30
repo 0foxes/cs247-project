@@ -9,18 +9,18 @@ LinkBoostAbility::LinkBoostAbility(Player* owner) : Ability(owner) {}
 bool LinkBoostAbility::use(Game& game, istream& in) {
     char linkId;
     if (!(in >> linkId)) {
-        cerr << "Error: link boost arg missing\n";
+        cout << "Error: link boost arg missing\n";
         return false;
     }
 
     // boost the link after checking ownership
     if (!getOwner()) {
-        cerr << "Error: owner is null\n";
+        cout << "Error: owner is null\n";
         return false;
     }
     std::shared_ptr<Link> link = getOwner()->getLink(linkId);
     if (!link) {
-        cerr << "Error: invalid link ID\n";
+        cout << "Error: invalid link ID\n";
         return false;
     }
     link->setBoosted(true);

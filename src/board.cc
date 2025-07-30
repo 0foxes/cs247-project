@@ -7,16 +7,16 @@ void Board::registerObserver(shared_ptr<View> observer) { observers.push_back(ob
 void Board::init() {
     // init server ports, otherwise all cells default empty
     grid.at(0).at(3).isServerPort = true;
-    grid.at(0).at(3).serverPortOwner = 1;
+    grid.at(0).at(3).serverPortOwner = 0;
 
     grid.at(0).at(4).isServerPort = true;
-    grid.at(0).at(4).serverPortOwner = 1;
+    grid.at(0).at(4).serverPortOwner = 0;
 
     grid.at(7).at(3).isServerPort = true;
-    grid.at(7).at(3).serverPortOwner = 2;
+    grid.at(7).at(3).serverPortOwner = 1;
 
     grid.at(7).at(4).isServerPort = true;
-    grid.at(7).at(4).serverPortOwner = 2;
+    grid.at(7).at(4).serverPortOwner = 1;
 
     notifyObservers(0, 3);
     notifyObservers(0, 4);
@@ -27,11 +27,11 @@ void Board::init() {
 void Board::notifyObservers(int r, int c) {
     View::CellState state;
     const Cell& cell = getCell(r, c);
-    if (cell.link != nullptr) {
-        state.link = cell.link->getSymbol();
-        state.linkOwnerId = cell.link->getOwner();
-        state.linkType = cell.link->getType();
-        state.isRevealed = cell.link->getIsRevealed();
+    if (!cell.links.empty()) {
+        state.link = cell.links.front()->getSymbol();
+        state.linkOwnerId = cell.links.front()->getOwner();
+        state.linkType = cell.links.front()->getType();
+        state.isRevealed = cell.links.front()->getIsRevealed();
     } else {
         state.link = '.';
     }
@@ -52,12 +52,12 @@ void Board::initLink(int r, int c, shared_ptr<Link> link) {
     }
 
     Cell& targetCell = grid[r][c];
-    if (targetCell.link != nullptr) {
+    if (targetCell.links.size() > 0) {
         cerr << "Error: target cell already occupied by a link.\n";
         return;
     }
 
-    targetCell.link = link;
+    targetCell.links.emplace_back(link);
     // notify observers
     notifyObservers(r, c);
 }
@@ -85,8 +85,8 @@ Board::MoveResult Board::moveLink(int r, int c, shared_ptr<Link> link) {
     }
 
     // target cell contains a link already
-    if (targetCell.link != nullptr) {
-        if (link->getOwner() == targetCell.link->getOwner()) {
+    if (!targetCell.links.empty()) {
+        if (link->getOwner() == targetCell.links.front()->getOwner()) {
             cout << "Error: target cell occupied by your own link\n";
             return move;
         }
@@ -98,12 +98,12 @@ Board::MoveResult Board::moveLink(int r, int c, shared_ptr<Link> link) {
         return move;
     }
 
-    grid[oldR][oldC].link = nullptr;
+    grid[oldR][oldC].links.clear();
     move.oldR = oldR;
     move.oldC = oldC;
 
     // update target cell properties
-    targetCell.link = link;
+    targetCell.links.emplace_back(link);
     // notify observers
     notifyObservers(r, c);
     notifyObservers(oldR, oldC); // clear old link
@@ -185,7 +185,13 @@ void Board::removeLink(shared_ptr<Link> link) {
     int r = loc.first;
     int c = loc.second;
     if (isInBounds(r, c)) {
-        grid[r][c].link = nullptr;
+        // find the link in the cell and remove it
+        for (auto it = grid[r][c].links.begin(); it != grid[r][c].links.end(); ++it) {
+            if (*it == link) {
+                grid[r][c].links.erase(it);
+                break;
+            }
+        }
         notifyObservers(r, c);
     } else {
         cout << "Error: can't remove link - out of bounds.\n";

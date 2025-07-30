@@ -14,8 +14,8 @@ using namespace std;
 
 class Player {
     // static int currID; // the current ID the latest player is on
-    int id; // this player instance's ID
-    // map of abilities this player owns. key is the ability's ID (1-5)
+    int playerId; // this player instance's ID. 0-indexed
+    // map of abilities this player owns. 0-indexed
     vector<shared_ptr<Ability>> abilities;
     vector<shared_ptr<Link>> links; // all links this player owns (can move)
     // all links this players has downloaded

@@ -16,18 +16,18 @@
 //  5 abilities (not done)
 //  8 links (4 data 4 virus, 1 of each strength)
 //  2 associated server ports?
-Player::Player(int id, char base) : id{id}, baseSymbol{base}, unsurmountable{false} {}
+Player::Player(int id, char base) : playerId{id}, baseSymbol{base}, unsurmountable{false} {}
 
 void Player::registerObserver(shared_ptr<View> observer) { observers.push_back(observer); }
 
 void Player::addLink(char symbol, shared_ptr<Link> link) { links.emplace_back(link); }
 
-int Player::getId() const { return id; }
+int Player::getId() const { return playerId; }
 
-string Player::getName() const { return "Player " + to_string(id); }
+string Player::getName() const { return "Player " + to_string(playerId); }
 
 void Player::printcensored(ostream& out) {
-    out << "Player " << to_string(id) << ":" << endl;
+    out << "Player " << to_string(playerId) << ":" << endl;
     out << "Downloaded: ";
     bool isfirst = true;
     for (shared_ptr<Link> link : downloaded) {
@@ -50,8 +50,8 @@ void Player::printcensored(ostream& out) {
 
 void Player::printabilities(ostream& out) {
     for (int i = 1; i <= abilities.size(); i++) {
-        out << i << ": " << abilities[i]->getName() << " - ";
-        if (!abilities[i]->isUsed()) {
+        out << i << ": " << abilities[i - 1]->getName() << " - ";
+        if (!abilities[i - 1]->isUsed()) {
             out << " unused";
         } else {
             out << " used";
@@ -71,7 +71,7 @@ void Player::init(string createLink, string createAbility) {
     for (int i = 0; i < 8; i++) {
         shared_ptr<Link> newlink = make_shared<Link>();
         if (linkStream >> s && s.size() == 2) {
-            newlink->setOwner(id);
+            newlink->setOwner(playerId);
             if (s[0] == 'D') {
                 newlink->makeData();
             } else if (s[0] == 'V') {
@@ -140,7 +140,7 @@ void Player::init(string createLink, string createAbility) {
 
     // notify observers of the new links
     for (shared_ptr<View> observer : observers) {
-        observer->notify(id, links, downloaded, abilities);
+        observer->notify(playerId, links, downloaded, abilities);
     }
 }
 
@@ -176,7 +176,8 @@ bool Player::useAbility(int id, istream& in, Game& game) {
         return false;
     }
 
-    shared_ptr<Ability> ability = abilities[id];
+    // input is 1-indexed so subtract 1
+    shared_ptr<Ability> ability = abilities[id - 1];
     if (!ability) {
         cerr << "Error: ability nullptr " << id << endl;
         return false;
@@ -188,19 +189,15 @@ bool Player::useAbility(int id, istream& in, Game& game) {
         return false;
     }
 
-    // notify observers of ability use
-    for (shared_ptr<View> observer : observers) {
-        observer->notify(game.getCurrPlayerId() + 1, links, downloaded, abilities);
-    }
-
     bool result = ability->use(game, in);
-    // notify observers of ability results
+    // notify observers of ability use and result
     for (shared_ptr<View> observer : observers) {
-        observer->notify(game.getNextPlayerId() + 1, game.getNextPlayer().links,
+        observer->notify(game.getCurrPlayerId(), links, downloaded, abilities);
+        observer->notify(game.getNextPlayerId(), game.getNextPlayer().links,
                          game.getNextPlayer().downloaded, game.getNextPlayer().abilities);
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                game.getBoard().notifyObservers(i,j);
+                game.getBoard().notifyObservers(i, j);
             }
         }
     }
@@ -214,6 +211,6 @@ void Player::download(shared_ptr<Link> link) {
     downloaded.push_back(link);
     // notify observers of the new downloaded link
     for (shared_ptr<View> observer : observers) {
-        observer->notify(id, links, downloaded, abilities);
+        observer->notify(playerId, links, downloaded, abilities);
     }
 }
