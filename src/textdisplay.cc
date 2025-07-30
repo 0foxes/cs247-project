@@ -6,9 +6,20 @@ TextDisplay::TextDisplay() : theBoard{vector<vector<char>>(8, vector<char>(8, '.
 /*
  * updates the symbol at position r, c
  */
-// for now there is no way to update player state since its not a part of the
-// display rn
-void TextDisplay::notify(int r, int c, char change) { theBoard.at(r).at(c) = change; }
+void TextDisplay::notify(int r, int c, CellState cell) {
+    char itemSymbol = cell.link;
+
+    // prioritize displaying link, then firewall and serverport
+    if (itemSymbol != '.') {
+        itemSymbol = cell.link;
+    } else if (cell.hasFirewall) {
+        // firewall symbol upsidedown for player 1
+        itemSymbol = (cell.firewallOwnerId == 1) ? 'm' : 'w';
+    } else if (cell.isServerPort) {
+        itemSymbol = 'S';
+    }
+    theBoard[r][c] = itemSymbol;
+}
 
 void TextDisplay::notify(int playerId, vector<shared_ptr<Link>> links,
                          vector<shared_ptr<Link>> downloads) {
@@ -39,7 +50,12 @@ void TextDisplay::printPlayer(int id, ostream& out) {
             out << " ";
         }
         isfirst = false;
-        out << link->getSymbol() << ": " << *link;
+        // only print opponent links if they are revealed or its the current player's
+        if (link->getIsRevealed() || id == currPlayerId) {
+            out << link->getSymbol() << ": " << *link;
+        } else {
+            out << link->getSymbol() << ": ?";
+        }
     }
     out << endl;
 }

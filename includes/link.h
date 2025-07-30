@@ -23,6 +23,9 @@ class Link {
     char linkSymbol;
     int linkOwner;
 
+    // true if it is revealed to all players
+    bool isRevealed;
+
     // true if it has the boosted ability (move 1 extra cell)
     bool isBoosted;
 
@@ -39,6 +42,7 @@ class Link {
     void setSymbol(char symbol);
     void setOwner(int id);
     void setBoosted(bool boosted) { isBoosted = boosted; }
+    void setRevealed(bool revealed) { isRevealed = revealed; }
 
     // getters
     LinkType getType() const;
@@ -48,6 +52,7 @@ class Link {
     char getSymbol() const;
     int getOwner() const;
     bool getIsBoosted() const { return isBoosted; }
+    bool getIsRevealed() const { return isRevealed; }
 };
 
 ostream& operator<<(ostream& out, const Link& link);

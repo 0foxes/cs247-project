@@ -44,28 +44,42 @@ void GraphicDisplay::drawPlayerState(int playerId) {
             linkStr = linkStr + " ";
         }
         isfirst = false;
-        linkStr = linkStr + link->getSymbol() + ": " + link->toString();
+        // only print opponent links if they are revealed or its the current player's
+        if (link->getIsRevealed() || playerId == currPlayerId) {
+            linkStr = linkStr + link->getSymbol() + ": " + link->toString();
+        } else {
+            linkStr = linkStr + link->getSymbol() + ": ?";
+        }
     }
 
     xw.drawString(10, yBase + 3 * lineHeight, linkStr);
 }
 
-void GraphicDisplay::notify(int r, int c, char change) {
-    string itemStr(1, change);
-    if (change == '.') {
-        itemStr = ""; // empty cell
-    }
+void GraphicDisplay::notify(int r, int c, CellState cell) {
+    char itemSymbol = cell.link;
 
     if (r < 0 || r >= gridSize || c < 0 || c >= gridSize) {
         cerr << "invalid notif";
         return;
     }
-    displayState[r][c] = change;
+
+    // prioritize displaying link, then firewall and serverport
+    if (itemSymbol != '.') {
+        itemSymbol = cell.link;
+    } else if (cell.hasFirewall) {
+        // firewall symbol upsidedown for player 1
+        itemSymbol = (cell.firewallOwnerId == 1) ? 'm' : 'w';
+    } else if (cell.isServerPort) {
+        itemSymbol = 'S';
+    }
+    displayState[r][c] = itemSymbol;
 
     // erase old item
     xw.fillRectangle(c * cellWidth + 5, r * cellWidth + 5, cellWidth - 10, cellWidth - 10,
                      Xwindow::White);
-    xw.drawString((c * cellWidth) + (cellWidth / 2), (r * cellWidth) + (cellWidth / 2), itemStr);
+    // draw new item symbol or blank if nothing there
+    xw.drawString((c * cellWidth) + (cellWidth / 2), (r * cellWidth) + (cellWidth / 2),
+                  (itemSymbol == '.') ? "" : string(1, itemSymbol));
 }
 
 void GraphicDisplay::notify(int playerId, vector<shared_ptr<Link>> links,

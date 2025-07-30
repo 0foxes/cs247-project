@@ -1,6 +1,6 @@
 # final: test.o #final target
 # 	g++ test.o -o flood -lX11
-CXXFLAGS=-MMD -MP -g -Iincludes
+CXXFLAGS=-MMD -MP -g -Iincludes -std=c++14
 
 SOURCES = $(shell find src -name "*.cc")
 OBJECTS := $(patsubst src/%.cc, build/%.o, $(SOURCES))

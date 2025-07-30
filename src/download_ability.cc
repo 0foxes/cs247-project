@@ -18,7 +18,8 @@ bool DownloadAbility::use(Game& game, istream& in) {
     shared_ptr<Link> downloadedLink;
     if (game.getNextPlayer().owns(link)) {
         downloadedLink = game.getNextPlayer().getOwnedLinks().at(index);
-        owner->Download(downloadedLink);
+        owner->download(downloadedLink);
+        game.getBoard().removeLink(downloadedLink);
     } else {
         cerr << "current player cannot download own link" << endl;
         return false;

@@ -10,11 +10,22 @@ using namespace std;
 
 class View {
   public:
+    // state of a cell from the view's pov
+    typedef struct {
+        char link = '.'; // link existing in this cell or '.' if no link
+        bool hasFirewall = false;
+        bool isServerPort = false;
+        // owner ids. -1 if not relevant
+        int linkOwnerId = -1;
+        int firewallOwnerId = -1;
+        int serverPortOwnerId = -1;
+    } CellState;
+
     /*
      * The Controller calls notify to
      * update the (r,c) location to contain item
      */
-    virtual void notify(int r, int c, char item) = 0;
+    virtual void notify(int r, int c, CellState cell) = 0;
 
     /**
      * Notify the view of a player state change.

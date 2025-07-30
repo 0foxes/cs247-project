@@ -35,7 +35,7 @@ class TextDisplay : public View {
     // 2. link on board got downloaded by a player
     // 3. cell on board got turned into something (a firewall?)
     // 4. turn changed (so player pov should change)
-    void notify(int r, int c, char change) override;
+    void notify(int r, int c, CellState cell) override;
 
     // update player state
     void notify(int playerId, vector<shared_ptr<Link>> links,

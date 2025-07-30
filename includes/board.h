@@ -11,8 +11,6 @@
 
 using namespace std;
 
-enum CellState { NORMAL_EMPTY, HAS_LINK, SERVER_PORT, FIREWALL };
-
 // A cell on the board can be
 // - empty or have a link
 // - normal or a server port or have a firewall
@@ -38,9 +36,6 @@ class Board {
 
     vector<shared_ptr<View>> observers;
 
-    // check if a position is in the board
-    bool isInBounds(int r, int c) const;
-
     // helper to get the cell at (r, c)
     const Cell& getCell(int r, int c) const { return grid.at(r).at(c); }
 
@@ -56,8 +51,8 @@ class Board {
         return {-1, -1}; // not found
     }
 
-    // helper to notify observers of a cell change
-    void notifyObservers(int r, int c, char state);
+    // helper to notify observers of a cell state change
+    void notifyObservers(int r, int c);
 
   public:
     // piece `symbol` moved from `oldR`, `oldC` to `newR`, `newC`
@@ -81,6 +76,26 @@ class Board {
     MoveResult moveLink(int r, int c, shared_ptr<Link> link);
 
     MoveResult moveLink(shared_ptr<Link> link, char direction); // direction must be u, d, l, or r
+
+    // check if a position is in the board
+    bool isInBounds(int r, int c) const;
+
+    bool placeFirewall(int r, int c, int ownerId);
+
+    // returns firewall owner id if there is a firewall at (r, c), -1 otherwise
+    int getFirewallOwner(int r, int c) const {
+        return getCell(r, c).hasFirewall ? getCell(r, c).firewallOwner : -1;
+    }
+
+    // returns server port owner id if there is a server port at (r, c), -1 otherwise
+    int getServerPortOwner(int r, int c) const {
+        return getCell(r, c).isServerPort ? getCell(r, c).serverPortOwner : -1;
+    }
+
+    // return link on (r, c) or nullptr if no link there
+    shared_ptr<Link> getLink(int r, int c) const { return getCell(r, c).link; }
+
+    void removeLink(shared_ptr<Link> link);
 };
 
 #endif

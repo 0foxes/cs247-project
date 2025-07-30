@@ -31,7 +31,7 @@ class GraphicDisplay : public View {
     GraphicDisplay(int n);
 
     // redraw the cell for (r, c) to contain the item `change`
-    void notify(int r, int c, char change) override;
+    void notify(int r, int c, CellState cell) override;
     void notify(int playerId, vector<shared_ptr<Link>> links,
                 vector<shared_ptr<Link>> downloads) override;
     void notifyCurrPlayer(int playerId) override { currPlayerId = playerId; }

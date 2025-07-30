@@ -25,7 +25,8 @@ class Game {
     // vector<Link> links;
     // Observers (or views)
     vector<shared_ptr<View>> observers;
-    int currPlayerTurn; // Index of the current player whose turn it is
+    int currPlayerTurn;    // Index of the current player whose turn it is
+    int abilitiesUsed = 0; // track how many abilities used this turn
 
     /*
      * The following field helps track how the game has progressed.
@@ -66,13 +67,14 @@ class Game {
     // void init(int r, int c,
     //           int change); // Called by Controller:init in response to
     // initialization requests when game is in init mode
-    void notify(int r, int c, char state);
+    // void notify(int r, int c, char state);
     void endTurn();
 
     Board& getBoard() { return board; }
     Player& getCurrentPlayer() { return players[currPlayerTurn]; }
     Player& getNextPlayer() { return players[1 - currPlayerTurn]; }
     int getCurrPlayerId() { return currPlayerTurn; }
+    int getAbilitiesUsed() const { return abilitiesUsed; }
 
     // use an ability for player. `in` is the ability args
     bool useAbility(int playerId, int ablityId, istream& in);

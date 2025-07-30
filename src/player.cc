@@ -2,6 +2,7 @@
 #include "../includes/ability.h"
 #include "../includes/download_ability.h"
 #include "../includes/expatriation_ability.h"
+#include "../includes/firewall_ability.h"
 #include "../includes/link_boost_ability.h"
 #include "../includes/polarize_ability.h"
 #include "../includes/scan_ability.h"
@@ -48,7 +49,7 @@ void Player::printcensored(ostream& out) {
 
 void Player::printabilities(ostream& out) {
     for (auto i : abilities) {
-        out << i.first;
+        out << i.first << ": " << i.second->getName() << " - ";
         if (!i.second->isUsed()) {
             out << " unused";
         } else {
@@ -57,6 +58,7 @@ void Player::printabilities(ostream& out) {
         out << endl;
     }
 }
+
 vector<shared_ptr<Link>> Player::getOwnedLinks() const { return links; }
 
 vector<shared_ptr<Link>> Player::getDownloaded() const { return downloaded; }
@@ -117,7 +119,7 @@ void Player::init(string createLink, string createAbility) {
             abilities[++numAbilities] = make_shared<DownloadAbility>(this);
             break;
         case 'F':
-            // firewll
+            abilities[++numAbilities] = make_shared<FirewallAbility>(this);
             break;
         default:
             cerr << "unknown ability: " << c << endl;
@@ -180,4 +182,11 @@ bool Player::useAbility(int id, istream& in, Game& game) {
 
 void Player::setUnsurmountable(bool val) { unsurmountable = val; }
 bool Player::getUnsurmountable() { return unsurmountable; }
-void Player::Download(shared_ptr<Link> link) { downloaded.push_back(link); }
+
+void Player::download(shared_ptr<Link> link) {
+    downloaded.push_back(link);
+    // notify observers of the new downloaded link
+    for (shared_ptr<View> observer : observers) {
+        observer->notify(id, links, downloaded);
+    }
+}

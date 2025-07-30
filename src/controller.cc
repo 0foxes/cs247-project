@@ -102,11 +102,12 @@ void Controller::play() {
             int abilityId;
             if (*in >> abilityId) {
                 if (!game->useAbility(game->getCurrPlayerId(), abilityId, *in)) {
-                    cerr << "Error: ability failed " << abilityId << endl;
+                    cout << "Error: ability failed " << abilityId << endl;
+                } else {
+                    cout << "Ability used" << endl;
                 }
-                cout << "Ability used" << endl;
             } else {
-                cerr << "Error: ability ID missing\n";
+                cout << "Error: ability ID missing\n";
             }
         } else if (cmd == "quit") {
             break;

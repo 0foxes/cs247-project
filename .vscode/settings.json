@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.h": "cpp",
         "cctype": "cpp",
         "clocale": "cpp",
         "cstddef": "cpp",
@@ -49,6 +50,16 @@
         "list": "cpp",
         "fstream": "cpp",
         "sstream": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "atomic": "cpp",
+        "cmath": "cpp",
+        "cstdarg": "cpp",
+        "cstdio": "cpp",
+        "functional": "cpp",
+        "numeric": "cpp",
+        "ratio": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp",
+        "stop_token": "cpp"
     }
 }

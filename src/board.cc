@@ -7,31 +7,41 @@ void Board::registerObserver(shared_ptr<View> observer) { observers.push_back(ob
 void Board::init() {
     // init server ports, otherwise all cells default empty
     grid.at(0).at(3).isServerPort = true;
-    notifyObservers(0, 3, 'S');
+    grid.at(0).at(3).serverPortOwner = 1;
+
     grid.at(0).at(4).isServerPort = true;
-    notifyObservers(0, 4, 'S');
+    grid.at(0).at(4).serverPortOwner = 1;
+
     grid.at(7).at(3).isServerPort = true;
-    notifyObservers(7, 3, 'S');
+    grid.at(7).at(3).serverPortOwner = 2;
+
     grid.at(7).at(4).isServerPort = true;
-    notifyObservers(7, 4, 'S');
+    grid.at(7).at(4).serverPortOwner = 2;
+
+    notifyObservers(0, 3);
+    notifyObservers(0, 4);
+    notifyObservers(7, 3);
+    notifyObservers(7, 4);
 }
 
-void Board::notifyObservers(int r, int c, char state) {
+void Board::notifyObservers(int r, int c) {
+    View::CellState state;
+    const Cell& cell = getCell(r, c);
+    if (cell.link != nullptr) {
+        state.link = cell.link->getSymbol();
+        state.linkOwnerId = cell.link->getOwner();
+    } else {
+        state.link = '.';
+    }
+    state.hasFirewall = cell.hasFirewall;
+    state.isServerPort = cell.isServerPort;
+    state.firewallOwnerId = cell.firewallOwner;
+    state.serverPortOwnerId = cell.serverPortOwner;
+
     for (shared_ptr<View> observer : observers) {
         observer->notify(r, c, state);
     }
 }
-
-// void Board::print(ostream& out) {
-//     for (shared_ptr<View> observer : observers) {
-//         observer->print(out);
-//     }
-//     // for (auto i : linkLocs) {
-//     //     out << i.first->symbol() << "(" << i.second.first << ", "
-//     //         << i.second.second << ") ";
-//     // }
-//     // out << endl;
-// }
 
 void Board::initLink(int r, int c, shared_ptr<Link> link) {
     if (!isInBounds(r, c)) {
@@ -47,7 +57,7 @@ void Board::initLink(int r, int c, shared_ptr<Link> link) {
 
     targetCell.link = link;
     // notify observers
-    notifyObservers(r, c, link->getSymbol());
+    notifyObservers(r, c);
 }
 
 Board::MoveResult Board::moveLink(int r, int c, shared_ptr<Link> link) {
@@ -57,7 +67,7 @@ Board::MoveResult Board::moveLink(int r, int c, shared_ptr<Link> link) {
     move.symbol = link->getSymbol();
 
     if (!isInBounds(r, c)) {
-        cerr << "Error: board can't move link - out of bounds.\n";
+        cout << "Error: board can't move link - out of bounds.\n";
         return move;
     }
 
@@ -68,28 +78,22 @@ Board::MoveResult Board::moveLink(int r, int c, shared_ptr<Link> link) {
     int oldR = loc.first;
     int oldC = loc.second;
     if (oldR == -1 || oldC == -1) {
-        cerr << "Error: link not found on the board.\n";
+        cout << "Error: link not found on the board.\n";
         return move;
     }
 
     // target cell contains a link already
     if (targetCell.link != nullptr) {
         if (link->getOwner() == targetCell.link->getOwner()) {
-            cerr << "Error: target cell occupied by your own link\n";
-            return move;
-        } else {
-            // TODO: battle!!!!!!!!!!
-            cout << "Battle between links occurs here.\n";
+            cout << "Error: target cell occupied by your own link\n";
             return move;
         }
     }
 
-    if (targetCell.isServerPort) {
-        // TODO: server port logic??
-    }
-
-    if (targetCell.hasFirewall) {
-        // TODO: firewall logic??????
+    // cant move onto your own server port
+    if (targetCell.isServerPort && targetCell.serverPortOwner == link->getOwner()) {
+        cout << "Error: can't move onto your own server port\n";
+        return move;
     }
 
     grid[oldR][oldC].link = nullptr;
@@ -99,8 +103,8 @@ Board::MoveResult Board::moveLink(int r, int c, shared_ptr<Link> link) {
     // update target cell properties
     targetCell.link = link;
     // notify observers
-    notifyObservers(r, c, link->getSymbol());
-    notifyObservers(oldR, oldC, '.'); // clear old link
+    notifyObservers(r, c);
+    notifyObservers(oldR, oldC); // clear old link
 
     return move;
 }
@@ -148,4 +152,40 @@ Board::MoveResult Board::moveLink(shared_ptr<Link> link, char direction) {
     }
 
     return moveLink(newRow, newCol, link);
+}
+
+bool Board::placeFirewall(int r, int c, int ownerId) {
+    if (!isInBounds(r, c)) {
+        cerr << "Error: can't place firewall out of bounds\n";
+        return false;
+    }
+
+    Cell& cell = grid[r][c];
+    if (cell.hasFirewall) {
+        cout << "Error: cell already has a firewall\n";
+        return false;
+    } else if (cell.isServerPort) {
+        cout << "Error: can't place firewall on a server port\n";
+        return false;
+    }
+
+    cell.hasFirewall = true;
+    cell.firewallOwner = ownerId;
+
+    notifyObservers(r, c);
+
+    return true;
+}
+
+void Board::removeLink(shared_ptr<Link> link) {
+    // find the link on the board
+    pair<int, int> loc = getLinkLocation(link);
+    int r = loc.first;
+    int c = loc.second;
+    if (isInBounds(r, c)) {
+        grid[r][c].link = nullptr;
+        notifyObservers(r, c);
+    } else {
+        cout << "Error: can't remove link - out of bounds.\n";
+    }
 }
