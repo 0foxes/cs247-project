@@ -69,9 +69,6 @@ class Board {
 
     Board();
     void registerObserver(shared_ptr<View> observer);
-    // void print(ostream& out);
-    // updateCell(CellState state, int r, int c);
-    // moveLinkTo(Link link, int r, int c);
     void init();
 
     // spawn a link into the board at (r, c)
@@ -80,10 +77,14 @@ class Board {
     // move a link already on the board to (r, c)
     MoveResult moveLink(int r, int c, shared_ptr<Link> link);
 
+    // move a link in the specified direction.
+    // returns -1 -1 -1 -1 if error.
+    // returns oldR, oldC, newR, newC if successful normal move
+    // returns oldR, oldC, -1, -1 if moved into a valid download edge
     MoveResult moveLink(shared_ptr<Link> link, char direction); // direction must be u, d, l, or r
 
     // check if a position is in the board
-    bool isInBounds(int r, int c) const;
+    bool isInBoard(int r, int c) const;
 
     bool placeFirewall(int r, int c, int ownerId);
 

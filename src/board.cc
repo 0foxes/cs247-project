@@ -46,7 +46,7 @@ void Board::notifyObservers(int r, int c) {
 }
 
 void Board::initLink(int r, int c, shared_ptr<Link> link) {
-    if (!isInBounds(r, c)) {
+    if (!isInBoard(r, c)) {
         cerr << "Error: board can't init link - out of bounds.\n";
         return;
     }
@@ -68,7 +68,7 @@ Board::MoveResult Board::moveLink(int r, int c, shared_ptr<Link> link) {
     move.newC = c;
     move.symbol = link->getSymbol();
 
-    if (!isInBounds(r, c)) {
+    if (!isInBoard(r, c)) {
         cout << "Error: board can't move link - out of bounds.\n";
         return move;
     }
@@ -111,7 +111,7 @@ Board::MoveResult Board::moveLink(int r, int c, shared_ptr<Link> link) {
     return move;
 }
 
-bool Board::isInBounds(int r, int c) const {
+bool Board::isInBoard(int r, int c) const {
     // assumes grid is rectangle
     return (r >= 0) && (r < grid.size()) && (c >= 0) && (c < grid[0].size());
 }
@@ -123,6 +123,7 @@ Board::MoveResult Board::moveLink(shared_ptr<Link> link, char direction) {
     int oldC = currLoc.second;
     if (oldR == -1 || oldC == -1) {
         cerr << "Error: link not found on the board.\n";
+        return MoveResult{-1, -1, -1, -1, link->getSymbol()};
     }
 
     // boosted links move 2 cells instead of 1
@@ -150,14 +151,23 @@ Board::MoveResult Board::moveLink(shared_ptr<Link> link, char direction) {
         break;
     default:
         cerr << "invalid direction" << endl;
-        return MoveResult{oldR, oldC, -1, -1, link->getSymbol()};
+        return MoveResult{-1, -1, -1, -1, link->getSymbol()};
+    }
+
+    if (!isInBoard(newRow, newCol)) {
+        // check if its a legal download move, if so return now
+        if ((link->getOwner() == 0 && direction == 'd') ||
+            (link->getOwner() == 1 && direction == 'u')) {
+            // return downloaded position
+            return MoveResult{oldR, oldC, newRow, newCol, link->getSymbol()};
+        }
     }
 
     return moveLink(newRow, newCol, link);
 }
 
 bool Board::placeFirewall(int r, int c, int ownerId) {
-    if (!isInBounds(r, c)) {
+    if (!isInBoard(r, c)) {
         cerr << "Error: can't place firewall out of bounds\n";
         return false;
     }
@@ -184,7 +194,7 @@ void Board::removeLink(shared_ptr<Link> link) {
     pair<int, int> loc = getLinkLocation(link);
     int r = loc.first;
     int c = loc.second;
-    if (isInBounds(r, c)) {
+    if (isInBoard(r, c)) {
         // find the link in the cell and remove it
         for (auto it = grid[r][c].links.begin(); it != grid[r][c].links.end(); ++it) {
             if (*it == link) {

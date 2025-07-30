@@ -58,6 +58,7 @@ void Game::printAbilities(ostream& out) { players[currPlayerTurn].printabilities
 
 /**
  * - physically moving the link on the board (board.movelink)
+ * - download if it moved off edge
  * - do firewall logic
  * - do serverport logic
  * - do battle logic
@@ -78,9 +79,24 @@ bool Game::moveLink(char link, char direction) {
     }
 
     Board::MoveResult move = board.moveLink(movedlink, direction);
-    if (move.newR == -1 || move.newC == -1) {
-        cerr << "Error: link cant be moved to the specified location.\n";
+
+    // check if move completely errored
+    if (move.oldR == -1 && move.oldC == -1 && move.newR == -1 && move.newC == -1) {
+        cout << "Error: invalid move" << endl;
         return false;
+    }
+
+    // this condition meets when the move is into a valid download edge
+    if (!board.isInBoard(move.newR, move.newC) && board.isInBoard(move.oldR, move.oldC)) {
+        // perform download
+        board.removeLink(movedlink);
+
+        players[currPlayerTurn].download(movedlink);
+
+        cout << "Player " << currPlayerTurn << " downloaded " << movedlink->getSymbol() << endl;
+
+        // return here since nothing else can happen after a download
+        return true;
     }
 
     // firewall logic

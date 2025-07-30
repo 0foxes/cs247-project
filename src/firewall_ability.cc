@@ -20,7 +20,7 @@ bool FirewallAbility::use(Game& game, istream& in) {
         return false;
     }
 
-    if (!game.getBoard().isInBounds(r, c)) {
+    if (!game.getBoard().isInBoard(r, c)) {
         cerr << "Error: cant place firewall out of bounds\n";
         return false;
     }
