@@ -61,6 +61,7 @@ class Player {
     // int Player::currID = 0;
     void setUnsurmountable(bool val);
     bool getUnsurmountable();
+    void Download(shared_ptr<Link> link);
 };
 
 #endif

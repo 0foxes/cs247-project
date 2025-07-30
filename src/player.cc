@@ -6,6 +6,7 @@
 #include "../includes/scan_ability.h"
 #include "../includes/stork_visitation_ability.h"
 #include "../includes/unsurmountable_ability.h"
+#include "../includes/download_ability.h"
 #include <memory>
 #include <sstream>
 
@@ -131,7 +132,7 @@ void Player::init(string createLink, string createAbility) {
             abilities[++numAbilities] = make_shared<PolarizeAbility>(this);
             break;
         case 'D':
-            // download
+            abilities[++numAbilities] = make_shared<DownloadAbility>(this);
             break;
         case 'F':
             // firewll
@@ -192,3 +193,4 @@ bool Player::useAbility(int id, istream& in, Game& game) {
 
 void Player::setUnsurmountable(bool val) { unsurmountable = val; }
 bool Player::getUnsurmountable() { return unsurmountable; }
+void Player::Download(shared_ptr<Link> link) {downloaded.push_back(link);}

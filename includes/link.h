@@ -18,9 +18,7 @@ class Link {
     // aaa
     LinkType linkType;
     int linkStrength; // must be 1-4
-    // int downloadedBy; // either is a player id or is -1 (undownloaded)
-    // int row, column;  // either is a cell on the board or is (-1, -1)
-    // (unplaced)
+    int downloadedBy; // either is a player id or is -1 (undownloaded)
     int uniqueId;
     char linkSymbol;
     int linkOwner;

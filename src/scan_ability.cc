@@ -9,8 +9,6 @@ ScanAbility::ScanAbility(Player* owner) : Ability(owner) {}
 
 bool ScanAbility::use(Game& game, istream& in) {
     char link;
-
-    // args are row, col
     if (!(in >> link)) {
         cerr << "Error: scan arg missing\n";
         return false;
