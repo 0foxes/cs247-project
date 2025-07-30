@@ -1,4 +1,4 @@
-#include "graphicdisplay.h"
+#include "../includes/graphicdisplay.h"
 
 // note: init xw with space for 500x500 grid + player info sections
 GraphicDisplay::GraphicDisplay(int n)
