@@ -4,6 +4,8 @@
 #include "../includes/stork_visitation_ability.h"
 #include "../includes/expatriation_ability.h"
 #include "../includes/scan_ability.h"
+#include "../includes/polarize_ability.h"
+#include <memory>
 #include <sstream>
 
 // Each player should get initialized with:
@@ -125,7 +127,7 @@ void Player::init(string createLink, string createAbility) {
             abilities[++numAbilities] = make_shared<ScanAbility>(this);
             break;
         case 'P':
-            // polarize
+            abilities[++numAbilities] = make_shared<PolarizeAbility>(this);
             break;
         case 'D':
             // download

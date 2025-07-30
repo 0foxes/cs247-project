@@ -14,6 +14,7 @@ Link::Link()
 void Link::makeVirus() { linkType = LinkType::VIRUS; }
 void Link::makeData() { linkType = LinkType::DATA; }
 void Link::setStrength(int strength) { linkStrength = strength; }
+void Link::setType(LinkType type) {linkType = type;}
 void Link::setSymbol(char symbol) { linkSymbol = symbol; }
 
 // getters

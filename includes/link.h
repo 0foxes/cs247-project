@@ -37,6 +37,7 @@ class Link {
     void makeVirus();
     void makeData();
     void setStrength(int strength);
+    void setType(LinkType type);
     void setSymbol(char symbol);
     void setOwner(int id);
     void setBoosted(bool boosted) { isBoosted = boosted; }
