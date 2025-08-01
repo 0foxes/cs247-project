@@ -10,48 +10,10 @@
 
 using namespace std;
 
-// TODO (part b)
 Controller::Controller(string link1, string link2, string ability1, string ability2, bool isGraphic)
     : game{nullptr} {
     game = make_shared<Game>(link1, link2, ability1, ability2, isGraphic);
-    // else(){
-
-    // }
 }
-// Controller::Controller(bool b) : isGraphic{b}, td{nullptr}, game{new Game()}
-// {}
-
-// Controller::~Controller() {
-//     delete td;
-//     delete game;
-// }
-
-/*
- * Update the View(s) to indicate the new game state
- */
-// void Controller::notify(int r, int c, int state) {
-//     if (td)
-//         td->notify(r, c, state);
-// }
-
-/*
- * Called when command init is received
- */
-// void Controller::init(istream& input, Game& g) {
-//     int r, c, s;
-//     while (input >> r >> c && r != -1 && c != -1) {
-//         input >> s;
-//         g.init(r, c, s);
-//     }
-// }
-
-// bool Controller::checkWin(int movesLeft) {
-//     if (game->isWon() && movesLeft != 0) {
-//         cout << "Won" << endl;
-//         return true;
-//     }
-//     return false;
-// }
 
 void Controller::play() {
     int moves = 0;
@@ -108,6 +70,14 @@ void Controller::play() {
                 cout << "Error: ability ID missing\n";
             }
         } else if (cmd == "quit") {
+            break;
+        }
+
+        // check win/loss after each move.
+        // display of winner is done inside Game::isGameOver()
+        if (game->isGameOver()) {
+            cout << "Game over!" << endl;
+            game->printGame(cout);
             break;
         }
     }

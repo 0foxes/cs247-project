@@ -24,9 +24,6 @@ class Player {
     char baseSymbol;
     bool unsurmountable;
 
-    // needs:
-    // downloaded links list?
-
   public:
     // Each player should get initialized with:
     //  5 abilities
@@ -50,6 +47,26 @@ class Player {
     shared_ptr<Link> getLink(char symbol);
 
     vector<shared_ptr<Link>> getDownloaded() const;
+    // helpers to get download counts
+    int getDownloadedDataCount() const {
+        int count = 0;
+        for (auto& link : downloaded) {
+            if (link->getType() == LinkType::DATA) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    int getDownloadedVirusCount() const {
+        int count = 0;
+        for (auto& link : downloaded) {
+            if (link->getType() == LinkType::VIRUS) {
+                count++;
+            }
+        }
+        return count;
+    }
 
     void init(string createlink = "D1 D2 D3 D4 V1 V2 V3 V4", string createability = "LFDSP");
 
@@ -57,8 +74,6 @@ class Player {
     // id is the ability ID (1-5). in is ability args
     bool useAbility(int id, istream& in, Game& game);
 
-    // Initialize static member(s)
-    // int Player::currID = 0;
     void setUnsurmountable(bool val);
     bool getUnsurmountable();
     void download(shared_ptr<Link> link);

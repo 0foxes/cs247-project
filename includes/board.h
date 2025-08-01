@@ -30,11 +30,6 @@ class Board {
 
     // the board of cells. assume board is rectangular grid
     vector<vector<Cell>> grid;
-    // map<shared_ptr<Link>, pair<int, int>> linkLocs;
-    // key{a, b} is a server port owned by player w id {value}
-    // map<pair<int, int>, int> serverPorts;
-    // key{a, b} holds link {value}
-    // map<pair<int, int>, shared_ptr<Link>> occupied;
 
     vector<shared_ptr<View>> observers;
 

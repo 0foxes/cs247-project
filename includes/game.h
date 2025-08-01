@@ -16,27 +16,15 @@ class Game {
     static constexpr int NUM_PLAYERS = 2;
 
     // The board
-    // unique_ptr<Board> theBoard;
     Board board;
     // Associated players
     vector<Player> players;
     // all associated links
     vector<shared_ptr<Link>> allLinks;
-    // vector<Link> links;
     // Observers (or views)
     vector<shared_ptr<View>> observers;
     int currPlayerTurn;    // Index of the current player whose turn it is
     int abilitiesUsed = 0; // track how many abilities used this turn
-
-    /*
-     * The following field helps track how the game has progressed.
-     * The field should track how many Cells of the grid are of each color.
-     * Whenever a Cell changes color, the corresponding color count should
-     * be updated.
-     */
-    // unsigned int colours[5];
-    // GameNotification* notification; // object registered for notifications
-    // Add private members, if necessary.
 
   public:
     Game(string player1links, string player2links, string player1abilities, string player2abilities,
@@ -49,25 +37,6 @@ class Game {
     void printGame(ostream& out);
     void printAbilities(ostream& out);
 
-    /*
-     * Receive update notification from Cells.
-     */
-    // void notify(int r, int c, int oldState, int newState);
-
-    /*
-     * The following method is used to determine if the game has been won.
-     * ???
-     */
-    // bool isWon();
-    // void
-    // init(int n,
-    //  GameNotification* gameNotification); // Sets up an n x n grid.  Clears
-    // old grid, if necessary.
-    // void change(int c); // Changes (0,0) and all appropriate neighbours to c
-    // void init(int r, int c,
-    //           int change); // Called by Controller:init in response to
-    // initialization requests when game is in init mode
-    // void notify(int r, int c, char state);
     void endTurn();
 
     Board& getBoard() { return board; }
@@ -80,6 +49,9 @@ class Game {
 
     // use an ability for player. `in` is the ability args
     bool useAbility(int playerId, int ablityId, istream& in);
+
+    // check if a player has won or lost, which ends the game
+    bool isGameOver();
 };
 
 #endif

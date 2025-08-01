@@ -204,3 +204,19 @@ bool Game::useAbility(int playerId, int abilityId, istream& in) {
 
     return true;
 }
+
+bool Game::isGameOver() {
+    for (int i = 0; i < 2; ++i) {
+        int data = players[i].getDownloadedDataCount();
+        int virus = players[i].getDownloadedVirusCount();
+
+        if (data >= 4) {
+            cout << "Player " << (i + 1) << " wins by downloading 4 data!" << endl;
+            return true;
+        } else if (virus >= 4) {
+            cout << "Player " << (i + 1) << " loses by downloading 4 viruses!" << endl;
+            return true;
+        }
+    }
+    return false;
+}
